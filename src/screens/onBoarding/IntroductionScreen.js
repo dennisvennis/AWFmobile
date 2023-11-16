@@ -17,6 +17,7 @@ import Pagination from "../../components/UI/Pagination";
 import slides from "../../utils/onBoardingSlides";
 import { useNavigation } from "@react-navigation/native";
 import asyncStorage from "../../utils/asyncStorage";
+import Arrow from "../../assets/svg/arrowLeft.svg"
 
 const { width, height } = Dimensions.get("screen");
 
