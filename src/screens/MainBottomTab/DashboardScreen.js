@@ -5,7 +5,6 @@ import HeaderImage from "../../components/HeaderImage";
 const DashboardScreen = () => {
   return (
     <View style={styles.screen}>
-      <HeaderImage />
       <View style={styles.container}>
         <Text style={styles.text}>DashboardScreen</Text>
       </View>

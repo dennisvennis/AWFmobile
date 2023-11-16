@@ -6,6 +6,7 @@ import {
   Animated,
   Image,
   TouchableOpacity,
+  Dimensions,
 } from "react-native";
 import Texts from "../../components/Texts";
 import Button from "../../components/Button";
@@ -16,6 +17,8 @@ import Pagination from "../../components/UI/Pagination";
 import slides from "../../utils/onBoardingSlides";
 import { useNavigation } from "@react-navigation/native";
 import asyncStorage from "../../utils/asyncStorage";
+
+const { width, height } = Dimensions.get("screen");
 
 const IntroductionScreen = () => {
   const navigation = useNavigation();

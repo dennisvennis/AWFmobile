@@ -7,7 +7,7 @@ const ReceiveScreen = () => {
     <View style={styles.screen}>
       <MainHeaderImage />
       <View style={styles.container}>
-        <Text style={styles.text}>ReceiveScreen</Text>
+        <Text style={styles.text}>ReceiveScreens</Text>
       </View>
     </View>
   );
