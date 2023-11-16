@@ -16,8 +16,10 @@ import HeaderImage from "../../components/HeaderImage";
 import Pagination from "../../components/UI/Pagination";
 import slides from "../../utils/onBoardingSlides";
 import { useNavigation } from "@react-navigation/native";
+import { useTheme } from "@shopify/restyle";
 import asyncStorage from "../../utils/asyncStorage";
-import Arrow from "../../assets/svg/arrowLeft.svg"
+import ArrowLeft from "../../assets/svg/arrowLeft.svg";
+import ArrowRight from "../../assets/svg/arrowRight.svg";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -26,6 +28,7 @@ const IntroductionScreen = () => {
   const [currentIndex, setCurrentIndex] = useState(0);
   const scrollX = useRef(new Animated.Value(0)).current;
   const slidesRef = useRef(null);
+  const theme = useTheme();
 
   const viewableItemsChanged = useRef(({ viewableItems }) => {
     setCurrentIndex(viewableItems[0].index);
@@ -65,8 +68,10 @@ const IntroductionScreen = () => {
   };
 
   return (
-    <View style={styles.screen}>
-      <HeaderImage />
+    <View
+      style={{ ...styles.screen, backgroundColor: theme.colors.mainBackground }}
+    >
+      {/* <HeaderImage /> */}
       <View style={styles.carousel}>
         <FlatList
           data={slides}
@@ -100,7 +105,7 @@ const IntroductionScreen = () => {
           onPress={prevButtonHandler}
           style={{ opacity: currentIndex === 0 && 0 }}
         >
-          <Image source={Images.arrowLeft} />
+          <ArrowLeft />
         </TouchableOpacity>
 
         <TouchableOpacity
@@ -112,7 +117,7 @@ const IntroductionScreen = () => {
             opacity: currentIndex === slides.length - 1 && 0,
           }}
         >
-          <Image source={Images.arrowRight} />
+          <ArrowRight />
         </TouchableOpacity>
       </View>
     </View>

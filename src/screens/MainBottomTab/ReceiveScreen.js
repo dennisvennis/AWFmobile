@@ -5,7 +5,6 @@ import MainHeaderImage from "../../components/MainHeaderImage";
 const ReceiveScreen = () => {
   return (
     <View style={styles.screen}>
-      <MainHeaderImage />
       <View style={styles.container}>
         <Text style={styles.text}>ReceiveScreens</Text>
       </View>

@@ -5,7 +5,6 @@ import MainHeaderImage from "../../components/MainHeaderImage";
 const LogoutScreen = () => {
   return (
     <View style={styles.screen}>
-      <MainHeaderImage />
       <View style={styles.container}>
         <Text style={styles.text}>LogoutScreen</Text>
       </View>

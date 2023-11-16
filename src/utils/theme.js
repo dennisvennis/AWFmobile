@@ -11,7 +11,7 @@ const palette = {
   warningDark: "#8F5E14",
 
   black: "#0B0B0B",
-  white: "#F0F2F3",
+  white: "#FFF",
   textLight: "#B3B9B3",
 };
 

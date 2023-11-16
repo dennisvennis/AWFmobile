@@ -1,7 +1,8 @@
-import { StyleSheet, Text, View, Image } from "react-native";
+import { StyleSheet, Text, View, Image, Dimensions } from "react-native";
 import React, { useEffect } from "react";
 import Images from "../../utils/images";
-
+import SplashImage from "../../assets/svg/splash.svg";
+const { width } = Dimensions.get("screen");
 const SplashScreen = ({ navigation }) => {
   useEffect(() => {
     setTimeout(() => {
@@ -10,7 +11,8 @@ const SplashScreen = ({ navigation }) => {
   });
   return (
     <View style={styles.screen}>
-      <Image style={styles.image} source={Images.spashImage} />
+      <SplashImage width={width} />
+      {/* <Image style={styles.image} source={Images.spashImage} /> */}
     </View>
   );
 };
@@ -19,7 +21,7 @@ export default SplashScreen;
 
 const styles = StyleSheet.create({
   screen: {
-    width: "100%",
+    width,
     flex: 1,
     justifyContent: "flex-end",
   },

@@ -18,16 +18,19 @@ const OnboardingItem = ({ item }) => {
   return (
     <View style={[styles.container, { width }]}>
       <View style={styles.imageContainer}>
-        <Image
-          source={item.image}
-          style={[styles.image, { resizeMode: "contain" }]}
-        />
+        <item.image />
       </View>
       <View style={{ marginTop: theme.spacing.s, width: "60%" }}>
-        <Texts variant="h2" style={styles.title}>
+        <Texts
+          variant="h2"
+          style={{ ...styles.title, fontSize: theme.spacing.l }}
+        >
           {item.title}
         </Texts>
-        <Texts variant="p" style={styles.description}>
+        <Texts
+          variant="p"
+          style={{ ...styles.description, fontSize: theme.spacing.m }}
+        >
           {item.description}
         </Texts>
       </View>

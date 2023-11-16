@@ -3,27 +3,16 @@ import MainScreens from "../screens/MainBottomTab";
 import TabBar from "../components/TabBar";
 import Images from "../utils/images";
 import { Image, Dimensions } from "react-native";
+import PrimaryHeader from "../assets/svg/primaryheader.svg";
 
 const { width, height } = Dimensions.get("screen");
 
 const MainNavigation = () => {
   const Tab = createBottomTabNavigator();
   return (
-    // <Tab.Navigator
-    //   screenOptions={{
-    //     headerShown: false,
-    //     unmountOnBlur: true,
-    //   }}
-    //   tabBar={(props) => <TabBar {...props} />}
-    // >
     <Tab.Navigator
       screenOptions={{
-        headerBackground: () => (
-          <Image
-            source={Images.onBoardHeader}
-            style={{ width, position: "relative", top: -10 }}
-          />
-        ),
+        header: () => <PrimaryHeader width={width} />,
       }}
       tabBar={(props) => <TabBar {...props} />}
     >
