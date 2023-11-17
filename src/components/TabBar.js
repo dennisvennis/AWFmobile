@@ -4,27 +4,33 @@ import Images from "../utils/images";
 import Texts from "./Texts";
 import { Height, Width } from "../utils/dimensions";
 import { useTheme } from "@shopify/restyle";
+import dashboardOutline from "../assets/svg/dashboardOutline.svg";
+import dashboardFill from "../assets/svg/dashboardFill.svg";
+import logoutOutline from "../assets/svg/logoutOutline.svg";
+import logoutFill from "../assets/svg/logoutOutFill.svg";
+import receiveOutline from "../assets/svg/receiveOutline.svg";
+import receiveFill from "../assets/svg/receiveFill.svg";
 
 const TabBar = (props) => {
   const theme = useTheme();
   const routes = [
     {
       title: "Dashboard",
-      Icon: Images.dashboardOutline,
+      Icon: dashboardOutline,
       routeName: "dashboardscreen",
-      SelectedIcon: Images.dashboardFill,
+      SelectedIcon: dashboardFill,
     },
     {
       title: "Receive",
-      Icon: Images.receiveOutline,
+      Icon: receiveOutline,
       routeName: "receivescreen",
-      SelectedIcon: Images.receiveFill,
+      SelectedIcon: receiveFill,
     },
     {
       title: "Logout",
-      Icon: Images.logoutOutline,
+      Icon: logoutOutline,
       routeName: "logoutscreen",
-      SelectedIcon: Images.logoutFill,
+      SelectedIcon: logoutFill,
     },
   ];
   const onPress = (item) => {
