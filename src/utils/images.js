@@ -3,4 +3,5 @@ export default {
   spashImage: require("../assets/images/splash.png"),
   onBoardHeader: require("../assets/images/onBoardHeader.png"),
   mainHeader: require("../assets/images/mainHeader.png"),
+  mainHeaderTest: require("../assets/images/mainHeaderTest.png"),
 };
