@@ -11,8 +11,7 @@ const SplashScreen = ({ navigation }) => {
   });
   return (
     <View style={styles.screen}>
-      <SplashImage width={width} />
-      {/* <Image style={styles.image} source={Images.spashImage} /> */}
+      <Image style={styles.image} source={Images.spashImage} /> 
     </View>
   );
 };
@@ -26,7 +25,7 @@ const styles = StyleSheet.create({
     justifyContent: "flex-end",
   },
   image: {
-    width: "100%",
+    width: width,
     resizeMode: "cover",
-  },
+    height: "60%"  },
 });

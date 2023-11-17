@@ -1,11 +1,12 @@
-import { StyleSheet, Dimensions } from "react-native";
+import { StyleSheet, Dimensions, Image } from "react-native";
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import SplashScreen from "../screens/onBoarding/SplashScreen";
 import IntroductionScreen from "../screens/onBoarding/IntroductionScreen";
 import MainNavigation from "./MainNavigation";
+import Images from "../utils/images";
 import OnboardHeader from "../assets/svg/onboardHeader.svg";
-const { width } = Dimensions.get("screen");
+const { width, height } = Dimensions.get("screen");
 
 const Stack = createNativeStackNavigator();
 
@@ -14,7 +15,10 @@ const OnboardingNavigation = () => {
     <Stack.Navigator
       screenOptions={{
         headerShown: true,
-        header: () => <OnboardHeader width={width} />,
+        // header: () => <OnboardHeader width={width} />,
+        header: () => (
+          <Image source={Images.onBoardHeader} style={styles.image} />
+        ),
       }}
     >
       <Stack.Screen
@@ -38,4 +42,12 @@ const OnboardingNavigation = () => {
 
 export default OnboardingNavigation;
 
-const styles = StyleSheet.create({});
+const styles = StyleSheet.create({
+  image: {
+    width: "100%",
+    resizeMode: "contain",
+    height: 200,
+    position: "relative",
+    top: -height * 0.045,
+  },
+});

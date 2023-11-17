@@ -2,7 +2,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import MainScreens from "../screens/MainBottomTab";
 import TabBar from "../components/TabBar";
 import Images from "../utils/images";
-import { Image, Dimensions } from "react-native";
+import { Image, Dimensions, StyleSheet } from "react-native";
 import PrimaryHeader from "../assets/svg/primaryheader.svg";
 
 const { width, height } = Dimensions.get("screen");
@@ -12,7 +12,7 @@ const MainNavigation = () => {
   return (
     <Tab.Navigator
       screenOptions={{
-        header: () => <PrimaryHeader width={width} />,
+        header: () => <Image source={Images.mainHeader} style={styles.image} />,
       }}
       tabBar={(props) => <TabBar {...props} />}
     >
@@ -27,3 +27,13 @@ const MainNavigation = () => {
 };
 
 export default MainNavigation;
+
+const styles = StyleSheet.create({
+  image: {
+    width: "100%",
+    resizeMode: "contain",
+    height: 200,
+    position: "relative",
+    top: -height * 0.045,
+  },
+});
