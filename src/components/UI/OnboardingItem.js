@@ -23,7 +23,7 @@ const OnboardingItem = ({ item }) => {
       <View style={{ marginTop: theme.spacing.s, width: "60%" }}>
         <Texts
           variant="h2"
-          style={{ ...styles.title, fontSize: theme.spacing.l }}
+          style={{ ...styles.title, fontSize: width*0.055 }}
         >
           {item.title}
         </Texts>

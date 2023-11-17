@@ -1,5 +1,5 @@
 import React from "react";
-import { View, TouchableOpacity, StyleSheet, Image } from "react-native";
+import { View, TouchableOpacity, StyleSheet, Image ,Dimensions} from "react-native";
 import Images from "../utils/images";
 import Texts from "./Texts";
 import { Height, Width } from "../utils/dimensions";
@@ -7,10 +7,13 @@ import { useTheme } from "@shopify/restyle";
 import dashboardOutline from "../assets/svg/dashboardOutline.svg";
 import dashboardFill from "../assets/svg/dashboardFill.svg";
 import logoutOutline from "../assets/svg/logoutOutline.svg";
-import logoutFill from "../assets/svg/logoutOutFill.svg";
+import logoutFill from "../assets/svg/logoutFill.svg";
 import receiveOutline from "../assets/svg/receiveOutline.svg";
 import receiveFill from "../assets/svg/receiveFill.svg";
 
+const { width, height } = Dimensions.get("screen");
+
+console.log(width);
 const TabBar = (props) => {
   const theme = useTheme();
   const routes = [
@@ -53,9 +56,9 @@ const TabBar = (props) => {
         >
           <React.Fragment>
             {props?.state?.index === index ? (
-              <Image source={item.SelectedIcon} />
+              <item.SelectedIcon/>
             ) : (
-              <Image source={item.Icon} />
+              <item.Icon/>
             )}
             <Texts
               style={{
@@ -86,6 +89,7 @@ const styles = StyleSheet.create({
     paddingTop: Height(2),
     paddingBottom: Height(2),
     width: Width(20),
+    width: width*0.3,
     //borderRadius: Width(30),
   },
 });
