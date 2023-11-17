@@ -32,10 +32,8 @@ export default function App() {
   return (
     <NavigationContainer>
       <ThemeProvider theme={theme}>
-        <SafeAreaView style={styles.container}>
-          <OnboardingNavigation />
-          <StatusBar style="auto" />
-        </SafeAreaView>
+      <OnboardingNavigation />
+      <StatusBar style="auto" />
       </ThemeProvider>
     </NavigationContainer>
   );
