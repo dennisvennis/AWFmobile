@@ -1,4 +1,4 @@
-import React, { useState, useRef } from "react";
+import React, { useState, useRef, useEffect } from "react";
 import {
   StyleSheet,
   View,
@@ -35,6 +35,16 @@ const IntroductionScreen = () => {
   }).current;
 
   const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;
+
+  useEffect(() => {
+    setTimeout(() => {
+      if (currentIndex === slides.length - 1) {
+        return;
+      } else {
+        slidesRef.current.scrollToIndex({ index: currentIndex + 1 });
+      }
+    }, 3000);
+  }, [currentIndex]);
 
   const nextButtonHandler = async () => {
     if (currentIndex < slides.length - 1) {
