@@ -1,5 +1,11 @@
 import React from "react";
-import { View, TouchableOpacity, StyleSheet, Image ,Dimensions} from "react-native";
+import {
+  View,
+  TouchableOpacity,
+  StyleSheet,
+  Image,
+  Dimensions,
+} from "react-native";
 import Images from "../utils/images";
 import Texts from "./Texts";
 import { Height, Width } from "../utils/dimensions";
@@ -13,7 +19,6 @@ import receiveFill from "../assets/svg/receiveFill.svg";
 
 const { width, height } = Dimensions.get("screen");
 
-console.log(width);
 const TabBar = (props) => {
   const theme = useTheme();
   const routes = [
@@ -43,7 +48,8 @@ const TabBar = (props) => {
   return (
     <View
       style={{
-        backgroundColor: theme.colors.mainBackgorund,
+        ...styles.container,
+        backgroundColor: theme.colors.mainBackground,
         flexDirection: "row",
         justifyContent: "space-evenly",
       }}
@@ -56,9 +62,9 @@ const TabBar = (props) => {
         >
           <React.Fragment>
             {props?.state?.index === index ? (
-              <item.SelectedIcon/>
+              <item.SelectedIcon />
             ) : (
-              <item.Icon/>
+              <item.Icon />
             )}
             <Texts
               style={{
@@ -89,7 +95,14 @@ const styles = StyleSheet.create({
     paddingTop: Height(2),
     paddingBottom: Height(2),
     width: Width(20),
-    width: width*0.3,
+    width: width * 0.3,
     //borderRadius: Width(30),
+  },
+  container: {
+    shadowColor: "#000",
+    shadowOpacity: 0.26,
+    shadowOffset: { width: 0, height: 2 },
+    shadowRadius: 6,
+    elevation: 10,
   },
 });

@@ -8,11 +8,8 @@ import {
   TouchableOpacity,
   Dimensions,
 } from "react-native";
-import Texts from "../../components/Texts";
 import Button from "../../components/Button";
 import OnboardingItem from "../../components/UI/OnboardingItem";
-import Images from "../../utils/images";
-import HeaderImage from "../../components/HeaderImage";
 import Pagination from "../../components/UI/Pagination";
 import slides from "../../utils/onBoardingSlides";
 import { useNavigation } from "@react-navigation/native";

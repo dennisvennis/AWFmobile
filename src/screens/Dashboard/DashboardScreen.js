@@ -1,6 +1,5 @@
 import { StyleSheet, Text, View } from "react-native";
 import React from "react";
-import HeaderImage from "../../components/HeaderImage";
 
 const DashboardScreen = () => {
   return (
@@ -20,6 +19,7 @@ const styles = StyleSheet.create({
     justifyContent: "center",
     alignItems: "center",
     padding: 0,
+    backgroundColor:"#fff"
   },
   container: {
     flex: 1,

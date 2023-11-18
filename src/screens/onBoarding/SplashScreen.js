@@ -23,6 +23,7 @@ const styles = StyleSheet.create({
     width,
     flex: 1,
     justifyContent: "flex-end",
+    backgroundColor: "#fff"
   },
   image: {
     width: width,
