@@ -2,9 +2,10 @@ import { createTheme } from "@shopify/restyle";
 import { fontScale, Height, Width } from "./dimensions";
 
 const palette = {
-  greenLight: "#439F41",
+  greenLight: "#88DE9C",
   greenPrimary: "#49945A",
   greenDark: "#0C4128",
+  greenLighter:"#D4F3DB",
 
   danger: "#ED3232",
   warning: "#F2C523",
@@ -12,7 +13,7 @@ const palette = {
 
   black: "#0B0B0B",
   white: "#FFF",
-  textLight: "#B3B9B3",
+  textLight: "#5B6871",
 };
 
 const theme = createTheme({
@@ -21,6 +22,8 @@ const theme = createTheme({
     headerColor: palette.greenPrimary,
     textColor: palette.black,
     textLight: palette.textLight,
+   lighterGreen: palette.greenLighter,
+   lightGreen: palette.greenLight,
    darkGreen: palette.greenDark,
    greenText: palette.greenPrimary,
     buttonBackground: palette.greenPrimary,
@@ -56,7 +59,7 @@ const theme = createTheme({
     },
     p: {
       fontSize: fontScale(16),
-      lineHeight: 25,
+      lineHeight: 20,
       fontFamily: "Inter-Medium",
       color: "textColor",
     },

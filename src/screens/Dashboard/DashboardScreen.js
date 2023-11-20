@@ -1,12 +1,110 @@
-import { StyleSheet, Text, View } from "react-native";
-import React from "react";
+import { StyleSheet, ScrollView, View, Dimensions } from "react-native";
+import React, { useEffect , useState} from "react";
+import { useTheme } from "@shopify/restyle";
+import Card from "../../components/Card";
+import Texts from "../../components/Texts";
+import PieChart from "../../components/PieChart";
+import notificationDummy from "../../utils/notificationDummy.json";
+import ChatSvg from "../../assets/svg/chat.svg";
+
+const { height } = Dimensions.get("screen");
 
 const DashboardScreen = () => {
+  const theme = useTheme();
+  const [recentActivities, setRecentActivities] = useState([])
+
+  useEffect(()=> {
+    const selectedActivities = notificationDummy.filter((data,index)=> index < 5)
+    setRecentActivities(selectedActivities)
+  },[])
   return (
     <View style={styles.screen}>
-      <View style={styles.container}>
-        <Text style={styles.text}>DashboardScreen</Text>
-      </View>
+      <ScrollView
+        showsVerticalScrollIndicator={false}
+        style={{
+          ...styles.container,
+          padding: theme.spacing.l,
+        }}
+      >
+        <Card
+          style={{ ...styles.cardContainer1, marginBottom: theme.spacing.xl }}
+        >
+          <Texts variant="p" style={{ fontSize: theme.spacing.m }}>
+            Good morning,
+          </Texts>
+          <Texts variant="h1" style={{ fontSize: theme.spacing.l }}>
+            Mariam
+          </Texts>
+          <Texts
+            variant="p"
+            style={{
+              fontSize: height * 0.018,
+              color: theme.colors.textLight,
+              width: "80%",
+            }}
+          >
+            Here is what is happeneing with your requests today
+          </Texts>
+        </Card>
+        <Card
+          style={{ ...styles.cardContainer2, marginBottom: theme.spacing.xl }}
+        >
+          <View style={styles.cardHeader}>
+            <Texts
+              variant="p"
+              style={{
+                ...styles.cardHeadertxt,
+                backgroundColor: theme.colors.lighterGreen,
+                color: theme.colors.greenText,
+                borderRadius: theme.borderRadius.l,
+              }}
+            >
+              Received Request Status
+            </Texts>
+          </View>
+          <View style={{ ...styles.cardBody, padding: theme.spacing.l }}>
+            <PieChart />
+          </View>
+        </Card>
+        <View
+          style={{
+            ...styles.activitesContainer,
+            marginBottom: theme.spacing.xl,
+            paddingBottom: theme.spacing.xl,
+          }}
+        >
+          <View style={{ ...styles.activitesHeader ,marginBottom: theme.spacing.m}}>
+            <Texts
+              variant="p"
+              style={{
+                ...styles.cardHeadertxt,
+                backgroundColor: theme.colors.lighterGreen,
+                color: theme.colors.greenText,
+                borderRadius: theme.borderRadius.l,
+              }}
+            >
+              Recent Activities
+            </Texts>
+          </View>
+          <View style={styles.activity_cont}>
+            {recentActivities.map((data) => (
+              <View style={styles.activity} key={data.id}>
+                <View style={styles.activity_img}>
+                  <ChatSvg width="20" height="20"/>
+                </View>
+                <View style={styles.activity_text}>
+                  <Texts variant="p" style={{textTransform: "capitalize",color: "#84919A"}}>
+                    {data.title}
+                  </Texts>
+                  <Texts variant="p" style={{}}>
+                    {data.message}
+                  </Texts>
+                </View>
+              </View>
+            ))}
+          </View>
+        </View>
+      </ScrollView>
     </View>
   );
 };
@@ -16,17 +114,45 @@ export default DashboardScreen;
 const styles = StyleSheet.create({
   screen: {
     flex: 1,
-    justifyContent: "center",
-    alignItems: "center",
-    padding: 0,
-    backgroundColor:"#fff"
+    paddingTop: 130,
   },
   container: {
     flex: 1,
-    alignItems: "center",
+    width: "100%",
+  },
+  cardContainer1: {
+    width: "100%",
+    gap: height * 0.005,
+    backgroundColor: "#FDFDFD",
+  },
+  cardContainer2: {
+    width: "100%",
+    padding: 1,
+  },
+  cardHeader: {
+    borderBottomWidth: 1,
+    borderBottomColor: "#E0ECE1",
+    paddingTop: height * 0.02,
+    paddingBottom: height * 0.015,
     justifyContent: "center",
+    alignItems: "center",
   },
-  text: {
-    fontSize: 20,
+  cardHeadertxt: {
+    paddingVertical: height * 0.003,
+    paddingHorizontal: height * 0.01,
+    fontSize: height * 0.016,
   },
+  activitesHeader: {
+    width: "100%",
+    padding: 1,
+    alignItems:"flex-start"
+  },
+  activity_cont:{
+    rowGap: height*0.02
+  },
+  activity:{
+    flexDirection:"row",
+    alignItems:"flex-end",
+    gap: height*0.019
+  }
 });
