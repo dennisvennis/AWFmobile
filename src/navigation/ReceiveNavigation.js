@@ -1,4 +1,4 @@
-import { StyleSheet } from "react-native";
+import { StyleSheet , Platform} from "react-native";
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { CardStyleInterpolators } from "@react-navigation/stack";
@@ -33,7 +33,7 @@ const ReceivedNavigation = () => {
             open: transition.config,
             close: transition.closeConfig,
           },
-          cardStyleInterpolator: CardStyleInterpolators.forModalPresentationIOS,
+          cardStyleInterpolator: Platform.OS === 'ios'? CardStyleInterpolators.forModalPresentationIOS: CardStyleInterpolators.forBottomSheetAndroid
         }}
       />
       {/*NOTIFICATION SCREENS*/}
@@ -48,7 +48,7 @@ const ReceivedNavigation = () => {
             open: transition.config,
             close: transition.closeConfig,
           },
-          cardStyleInterpolator: CardStyleInterpolators.forModalPresentationIOS,
+          cardStyleInterpolator: Platform.OS === 'ios'? CardStyleInterpolators.forModalPresentationIOS: CardStyleInterpolators.forRevealFromBottomAndroid
         }}
       />
       <Stack.Screen
@@ -61,7 +61,7 @@ const ReceivedNavigation = () => {
             open: transition.config,
             close: transition.closeConfig,
           },
-          cardStyleInterpolator: CardStyleInterpolators.forModalPresentationIOS,
+          cardStyleInterpolator: Platform.OS === 'ios'? CardStyleInterpolators.forModalPresentationIOS: CardStyleInterpolators.forBottomSheetAndroid
         }}
       />
     </Stack.Navigator>

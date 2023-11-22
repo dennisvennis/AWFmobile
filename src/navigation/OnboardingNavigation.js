@@ -1,4 +1,4 @@
-import { StyleSheet, Dimensions, Image } from "react-native";
+import { StyleSheet, Dimensions, Image , Platform} from "react-native";
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import transition from "../utils/transition";
@@ -31,7 +31,7 @@ const OnboardingNavigation = () => {
             open: transition.config,
             close: transition.closeConfig,
           },
-          cardStyleInterpolator: CardStyleInterpolators.forModalPresentationIOS,
+          cardStyleInterpolator: Platform.OS === 'ios'? CardStyleInterpolators.forModalPresentationIOS: CardStyleInterpolators.forBottomSheetAndroid
         }}
       />
       <Stack.Screen
@@ -43,7 +43,7 @@ const OnboardingNavigation = () => {
             open: transition.config,
             close: transition.closeConfig,
           },
-          cardStyleInterpolator: CardStyleInterpolators.forModalPresentationIOS,
+          cardStyleInterpolator: Platform.OS === 'ios'? CardStyleInterpolators.forModalPresentationIOS: CardStyleInterpolators.forBottomSheetAndroid
         }}
       />
       <Stack.Screen
@@ -63,7 +63,7 @@ const OnboardingNavigation = () => {
             open: transition.config,
             close: transition.closeConfig,
           },
-          cardStyleInterpolator: CardStyleInterpolators.forModalPresentationIOS,
+          cardStyleInterpolator: Platform.OS === 'ios'? CardStyleInterpolators.forModalPresentationIOS: CardStyleInterpolators.forBottomSheetAndroid
         }}
       />
     </Stack.Navigator>

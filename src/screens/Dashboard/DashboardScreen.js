@@ -1,5 +1,11 @@
-import { StyleSheet, ScrollView, View, Dimensions } from "react-native";
-import React, { useEffect , useState} from "react";
+import {
+  StyleSheet,
+  ScrollView,
+  View,
+  Dimensions,
+  Platform,
+} from "react-native";
+import React, { useEffect, useState } from "react";
 import { useTheme } from "@shopify/restyle";
 import Card from "../../components/Card";
 import Texts from "../../components/Texts";
@@ -9,25 +15,31 @@ import ChatSvg from "../../assets/svg/chat.svg";
 
 const { height } = Dimensions.get("screen");
 
+console.log(Platform.OS);
+
 const DashboardScreen = () => {
   const theme = useTheme();
-  const [recentActivities, setRecentActivities] = useState([])
+  const [recentActivities, setRecentActivities] = useState([]);
 
-  useEffect(()=> {
-    const selectedActivities = notificationDummy.filter((data,index)=> index < 5)
-    setRecentActivities(selectedActivities)
-  },[])
+  useEffect(() => {
+    const selectedActivities = notificationDummy.filter(
+      (data, index) => index < 5
+    );
+    setRecentActivities(selectedActivities);
+  }, []);
   return (
-    <View style={styles.screen}>
+    <View style={{ ...styles.screen, paddingHorizontal: theme.spacing.l }}>
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={{
           ...styles.container,
-          padding: theme.spacing.l,
         }}
       >
         <Card
-          style={{ ...styles.cardContainer1, marginBottom: theme.spacing.xl }}
+          style={{
+            ...styles.cardContainer1,
+            marginBottom: theme.spacing.xl,
+          }}
         >
           <Texts variant="p" style={{ fontSize: theme.spacing.m }}>
             Good morning,
@@ -47,20 +59,28 @@ const DashboardScreen = () => {
           </Texts>
         </Card>
         <Card
-          style={{ ...styles.cardContainer2, marginBottom: theme.spacing.xl }}
+          style={{
+            ...styles.cardContainer2,
+            marginBottom: theme.spacing.xl,
+          }}
         >
           <View style={styles.cardHeader}>
-            <Texts
-              variant="p"
+            <View
               style={{
-                ...styles.cardHeadertxt,
+                borderRadius: theme.borderRadius.s,
                 backgroundColor: theme.colors.lighterGreen,
-                color: theme.colors.greenText,
-                borderRadius: theme.borderRadius.l,
               }}
             >
-              Received Request Status
-            </Texts>
+              <Texts
+                variant="p"
+                style={{
+                  ...styles.cardHeadertxt,
+                  color: theme.colors.greenText,
+                }}
+              >
+                Received Request Status
+              </Texts>
+            </View>
           </View>
           <View style={{ ...styles.cardBody, padding: theme.spacing.l }}>
             <PieChart />
@@ -73,27 +93,41 @@ const DashboardScreen = () => {
             paddingBottom: theme.spacing.xl,
           }}
         >
-          <View style={{ ...styles.activitesHeader ,marginBottom: theme.spacing.m}}>
+          <View
+            style={{
+              ...styles.activitesHeader,
+              marginBottom: theme.spacing.m,
+            }}
+          >
+          <View  style={{
+            borderRadius: theme.borderRadius.s,
+            backgroundColor: theme.colors.lighterGreen,
+          }}>
             <Texts
               variant="p"
               style={{
                 ...styles.cardHeadertxt,
-                backgroundColor: theme.colors.lighterGreen,
                 color: theme.colors.greenText,
-                borderRadius: theme.borderRadius.l,
               }}
             >
               Recent Activities
             </Texts>
+            </View>
           </View>
           <View style={styles.activity_cont}>
             {recentActivities.map((data) => (
               <View style={styles.activity} key={data.id}>
                 <View style={styles.activity_img}>
-                  <ChatSvg width="20" height="20"/>
+                  <ChatSvg width="20" height="20" />
                 </View>
                 <View style={styles.activity_text}>
-                  <Texts variant="p" style={{textTransform: "capitalize",color: "#84919A"}}>
+                  <Texts
+                    variant="p"
+                    style={{
+                      textTransform: "capitalize",
+                      color: "#84919A",
+                    }}
+                  >
                     {data.title}
                   </Texts>
                   <Texts variant="p" style={{}}>
@@ -115,10 +149,14 @@ const styles = StyleSheet.create({
   screen: {
     flex: 1,
     paddingTop: 130,
+    alignItems: "center",
+    justifyContent: "center",
+    backgroundColor: "#f2f2f2",
   },
   container: {
     flex: 1,
     width: "100%",
+    paddingTop: 20
   },
   cardContainer1: {
     width: "100%",
@@ -145,14 +183,14 @@ const styles = StyleSheet.create({
   activitesHeader: {
     width: "100%",
     padding: 1,
-    alignItems:"flex-start"
+    alignItems: "flex-start",
   },
-  activity_cont:{
-    rowGap: height*0.02
+  activity_cont: {
+    rowGap: height * 0.02,
   },
-  activity:{
-    flexDirection:"row",
-    alignItems:"flex-end",
-    gap: height*0.019
-  }
+  activity: {
+    flexDirection: "row",
+    alignItems: "flex-end",
+    gap: height * 0.019,
+  },
 });

@@ -26,10 +26,10 @@ export default Card;
 const styles = StyleSheet.create({
   card: {
     shadowColor: "#000",
-    shadowOpacity: 0.26,
+    shadowOpacity: 0.15,
     shadowOffset: { width: 0, height: 2 },
-    shadowRadius: 6,
-    elevation: 10,
+    shadowRadius: 3,
+    elevation: 3,
     width: "100%",
   },
 });
