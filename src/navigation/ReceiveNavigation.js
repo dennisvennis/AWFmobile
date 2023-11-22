@@ -8,6 +8,7 @@ import OtherTabHeader from "../components/OtherTabHeader";
 import Notifications from "../screens/Notification";
 import NotificationHeader from "../components/NotificationHeader";
 import { useTheme } from "@shopify/restyle";
+import AuthNavigation from "./AuthNavigation";
 
 const Stack = createNativeStackNavigator();
 
@@ -25,37 +26,9 @@ const ReceivedNavigation = () => {
           header: () => (
             <OtherTabHeader
               navigateTo="dashboard"
-              notify="notificationscreen"
+              auth="auth"
             />
           ),
-          gestureDirection: "vertical",
-          transitionSpec: {
-            open: transition.config,
-            close: transition.closeConfig,
-          },
-          cardStyleInterpolator: Platform.OS === 'ios'? CardStyleInterpolators.forModalPresentationIOS: CardStyleInterpolators.forBottomSheetAndroid
-        }}
-      />
-      {/*NOTIFICATION SCREENS*/}
-
-      <Stack.Screen
-        name="notificationscreen"
-        component={Notifications.NotificationsScreen}
-        options={{
-          header: () => <NotificationHeader navigateTo="receive" />,
-          gestureDirection: "vertical",
-          transitionSpec: {
-            open: transition.config,
-            close: transition.closeConfig,
-          },
-          cardStyleInterpolator: Platform.OS === 'ios'? CardStyleInterpolators.forModalPresentationIOS: CardStyleInterpolators.forRevealFromBottomAndroid
-        }}
-      />
-      <Stack.Screen
-        name="singlenotificationscreen"
-        component={Notifications.SingleNotifcationScreen}
-        options={{
-          header: () => <NotificationHeader />,
           gestureDirection: "vertical",
           transitionSpec: {
             open: transition.config,

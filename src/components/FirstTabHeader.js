@@ -8,21 +8,21 @@ import {
 } from "react-native";
 import Images from "../utils/images";
 import React from "react";
-import NotificationIcon from "../assets/svg/notificationBell.svg";
+import LogoutIcon from "../assets/svg/logout.svg";
 import { useTheme } from "@shopify/restyle";
 import { useNavigation } from "@react-navigation/native";
 
 const { width, height } = Dimensions.get("screen");
 
-const FirstTabHeader = ({notify}) => {
+const FirstTabHeader = ({auth}) => {
   const theme = useTheme();
   const navigation = useNavigation()
   return (
     <View style={styles.mainContainer}>
       <Image source={Images.onBoardHeader} style={styles.imageMain} />
       <View style={{ ...styles.containerHead, padding: theme.spacing.l }}>
-        <TouchableOpacity style={styles.notifyicon} onPress={()=> navigation.navigate(notify)} activeOpacity={0.9}>
-          <NotificationIcon />
+        <TouchableOpacity style={styles.notifyicon} onPress={()=> navigation.navigate(auth)} activeOpacity={0.9}>
+          <LogoutIcon />
         </TouchableOpacity>
       </View>
     </View>
