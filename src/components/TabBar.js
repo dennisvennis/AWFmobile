@@ -16,6 +16,8 @@ import logoutOutline from "../assets/svg/logoutOutline.svg";
 import logoutFill from "../assets/svg/logoutFill.svg";
 import receiveOutline from "../assets/svg/receiveOutline.svg";
 import receiveFill from "../assets/svg/receiveFill.svg";
+import NotificationFill from "../assets/svg/notificationFill.svg"
+import NotificationOutline from "../assets/svg/notificationOutline.svg"
 
 const { width, height } = Dimensions.get("screen");
 
@@ -35,10 +37,10 @@ const TabBar = (props) => {
       SelectedIcon: receiveFill,
     },
     {
-      title: "Logout",
-      Icon: logoutOutline,
-      routeName: "logoutscreen",
-      SelectedIcon: logoutFill,
+      title: "Notification",
+      Icon: NotificationOutline,
+      routeName: "notificationscreen",
+      SelectedIcon: NotificationFill,
     },
   ];
   const onPress = (item) => {

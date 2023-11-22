@@ -9,12 +9,12 @@ import {
 import { useNavigation } from "@react-navigation/native";
 import Images from "../utils/images";
 import ArrowBack from "../assets/svg/arrowLeft.svg";
-import NotificationIcon from "../assets/svg/notificationBell.svg";
+import LogoutIcon from "../assets/svg/logout.svg";
 import { useTheme } from "@shopify/restyle";
 
 const { width, height } = Dimensions.get("screen");
 
-const OtherTabHeader = ({navigateTo,notify}) => {
+const OtherTabHeader = ({navigateTo,auth}) => {
   const theme = useTheme();
   const navigation = useNavigation();
 
@@ -26,8 +26,8 @@ const OtherTabHeader = ({navigateTo,notify}) => {
           <ArrowBack />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.notifyicon} onPress={()=>navigation.navigate(notify)} activeOpacity={0.9}>
-          <NotificationIcon />
+        <TouchableOpacity style={styles.notifyicon} onPress={()=>navigation.navigate(auth)} activeOpacity={0.9}>
+          <LogoutIcon />
         </TouchableOpacity>
       </View>
     </View>
@@ -78,6 +78,6 @@ const styles = StyleSheet.create({
   },
   notifyicon: {
     position: "relative",
-    top: -height * 0.01,
+    // top: -height * 0.009,
   },
 });

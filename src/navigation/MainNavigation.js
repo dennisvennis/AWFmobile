@@ -3,7 +3,7 @@ import { createBottomTabNavigator } from "@react-navigation/bottom-tabs";
 import TabBar from "../components/TabBar";
 import DashboardNavigation from "./DashboardNavigation";
 import ReceivedNavigation from "./ReceiveNavigation";
-import AuthNavigation from "./AuthNavigation";
+import NotificationNavigation from "./NotificationNavigation";
 
 const MainNavigation = () => {
   const Tab = createBottomTabNavigator();
@@ -25,8 +25,8 @@ const MainNavigation = () => {
         }}
       />
       <Tab.Screen
-        name="logoutscreen"
-        component={AuthNavigation}
+        name="notificationscreen"
+        component={NotificationNavigation}
         options={{
           headerShown: false,
         }}

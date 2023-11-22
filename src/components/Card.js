@@ -14,6 +14,7 @@ const Card = (props) => {
           : theme.colors.mainBackground,
         borderRadius: theme.borderRadius.m,
         padding: props.style.padding ? props.style.padding : theme.spacing.m,
+        width: props.style.width ? props.style.width : "100%"
       }}
     >
       {props.children}
@@ -30,6 +31,5 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2 },
     shadowRadius: 3,
     elevation: 3,
-    width: "100%",
   },
 });

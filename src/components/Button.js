@@ -24,6 +24,7 @@ const Button = (props) => {
           color: theme.colors.buttonText,
           ...styles.buttonText,
           ...props.style,
+          borderWidth: 0,
         }}
       >
         {props.value}
