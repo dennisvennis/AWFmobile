@@ -12,6 +12,7 @@ import Texts from "../../components/Texts";
 import PieChart from "../../components/PieChart";
 import notificationDummy from "../../utils/notificationDummy.json";
 import ChatSvg from "../../assets/svg/chat.svg";
+import Notifications from "../../components/UI/Notifications";
 
 const { height } = Dimensions.get("screen");
 
@@ -116,25 +117,7 @@ const DashboardScreen = () => {
           </View>
           <View style={styles.activity_cont}>
             {recentActivities.map((data) => (
-              <View style={styles.activity} key={data.id}>
-                <View style={styles.activity_img}>
-                  <ChatSvg width="20" height="20" />
-                </View>
-                <View style={styles.activity_text}>
-                  <Texts
-                    variant="p"
-                    style={{
-                      textTransform: "capitalize",
-                      color: "#84919A",
-                    }}
-                  >
-                    {data.title}
-                  </Texts>
-                  <Texts variant="p" style={{}}>
-                    {data.message}
-                  </Texts>
-                </View>
-              </View>
+              <Notifications  key={data.id} {...data}/>
             ))}
           </View>
         </View>
