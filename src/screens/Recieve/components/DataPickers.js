@@ -1,96 +1,193 @@
-import React, { useState } from "react";
-import { View, Text, TouchableOpacity, StyleSheet } from "react-native";
-import DateTimePicker from "@react-native-community/datetimepicker";
+import React, { useEffect, useState } from "react";
+import { StyleSheet, View, Modal, TouchableOpacity } from "react-native";
+import DatePicker from "react-native-modern-datepicker";
+import Texts from "../../../components/Texts";
+import { useTheme } from "@shopify/restyle";
+import Toast from "react-native-toast-message";
+import Button from "../../../components/Button";
 
-const DatePickers = () => {
-  const [startDate, setStartDate] = useState(new Date());
-  const [endDate, setEndDate] = useState(new Date());
-  const [showStartDatePicker, setShowStartDatePicker] = useState(false);
-  const [showEndDatePicker, setShowEndDatePicker] = useState(false);
+const DatePickers = ({
+  setIsModalOpen,
+  isModalOpen,
+  startDate,
+  setStartDate,
+  endDate,
+  setEndDate,
+}) => {
+  const [isStartDate, setIsStartDate] = useState(false);
+  const [isEndDate, setIsEndDate] = useState(false);
+  const [presentDate, setPresentdate] = useState("");
+  const theme = useTheme();
 
-  const handleStartDateChange = (event, selectedDate) => {
-    setShowStartDatePicker(false);
-    if (selectedDate) {
-      setStartDate(selectedDate);
+  useEffect(() => {
+    const currentDate = new Date();
+    const year = currentDate.getFullYear();
+    const month = String(currentDate.getMonth() + 1).padStart(2, "0");
+    const day = String(currentDate.getDate()).padStart(2, "0");
+    const formattedDate = `${year}-${month}-${day}`;
+    setPresentdate(formattedDate);
+  }, []);
+
+  const handleStartButton = () => {
+    setIsStartDate(true);
+    setIsEndDate(false);
+  };
+  const handleSelectedStartDate = (date) => {
+    setStartDate(date);
+    setIsStartDate(false);
+  };
+  const handleEndButton = () => {
+    setIsEndDate(true);
+    setIsStartDate(false);
+  };
+  const handleSelectedEndDate = (date) => {
+    if (startDate === "") {
+      Toast.show({
+        type: "error",
+        text1: "Please select start date",
+        visibilityTime: 3000,
+      });
+
+      setIsEndDate(false);
+      return;
     }
+    setEndDate(date);
+    setIsEndDate(false);
+    setIsModalOpen(false)
   };
-
-  const handleEndDateChange = (event, selectedDate) => {
-    setShowEndDatePicker(false);
-    if (selectedDate) {
-      setEndDate(selectedDate);
-    }
+  const handleCloseModal = () => {
+    setStartDate(false);
+    setEndDate(false);
+    setIsStartDate(false);
+    setIsEndDate(false);
+    setIsModalOpen(false);
   };
-
-  const showStartDatePickerModal = () => {
-    setShowStartDatePicker(true);
-  };
-
-  const showEndDatePickerModal = () => {
-    setShowEndDatePicker(true);
-  };
-
-  const handleQuery = () => {
-    // Perform your query using the startDate and endDate
-    console.log("Start Date:", startDate);
-    console.log("End Date:", endDate);
-  };
-
   return (
-    <View style={styles.container}>
-      <TouchableOpacity onPress={showStartDatePickerModal}>
-        <Text>Select Start Date</Text>
-      </TouchableOpacity>
-
-      {showStartDatePicker && (
-        <DateTimePicker
-          value={startDate}
-          mode="date"
-          display="spinner"
-          onChange={handleStartDateChange}
-        />
-      )}
-
-      <TouchableOpacity onPress={showEndDatePickerModal}>
-        <Text>Select End Date</Text>
-      </TouchableOpacity>
-
-      {showEndDatePicker && (
-        <DateTimePicker
-          value={endDate}
-          mode="date"
-          display="spinner"
-          onChange={handleEndDateChange}
-        />
-      )}
-
-      <TouchableOpacity onPress={handleQuery} style={styles.queryButton}>
-        <Text style={styles.queryButtonText}>Query</Text>
-      </TouchableOpacity>
-    </View>
+    <Modal transparent={true} visible={isModalOpen}>
+      <View style={styles.modalContainer}>
+        <View style={styles.modalContent}>
+          <View style={styles.btnContainer}>
+            <TouchableOpacity
+              style={styles.btn}
+              onPress={handleStartButton}
+              activeOpacity={0.9}
+            >
+              <Texts variant="p" style={{ color: theme.colors.greenText }}>
+                Start Date
+              </Texts>
+            </TouchableOpacity>
+            <TouchableOpacity
+              style={styles.btn}
+              onPress={handleEndButton}
+              activeOpacity={0.9}
+            >
+              <Texts variant="p" style={{ color: theme.colors.greenText }}>
+                End Date
+              </Texts>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.btnContainer2}>
+            <Texts variant="p">{startDate && startDate}</Texts>
+            <Texts variant="p">{startDate && "-"}</Texts>
+            <Texts variant="p">{endDate && "-"}</Texts>
+            <Texts variant="p">{endDate && endDate}</Texts>
+          </View>
+          {isStartDate && (
+            <View style={{marginBottom: theme.spacing.m}}>
+              <Texts
+                variant="h2"
+                style={{ marginBottom: theme.spacing.m, color: "#49945A" }}
+              >
+                Select start date
+              </Texts>
+              <DatePicker
+                options={{
+                  backgroundColor: "#111",
+                  textHeaderColor: "#fff",
+                  textDefaultColor: "#fff",
+                  selectedTextColor: "#fff",
+                  mainColor: "#49945A",
+                  textSecondaryColor: "#D4F3DB",
+                  borderColor: "rgba(122, 146, 165, 0.1)",
+                }}
+                current={presentDate}
+                selected={presentDate}
+                mode="datepicker"
+                minuteInterval={5}
+                style={{ borderRadius: 10 }}
+                onDateChange={(date) => handleSelectedStartDate(date)}
+              />
+            </View>
+          )}
+          {isEndDate && (
+            <View style={{marginBottom: theme.spacing.m}}>
+              <Texts
+                variant="h2"
+                style={{ marginBottom: theme.spacing.m, color: "#49945A" }}
+              >
+                Select End date
+              </Texts>
+              <DatePicker
+                options={{
+                  backgroundColor: "#111",
+                  textHeaderColor: "#fff",
+                  textDefaultColor: "#fff",
+                  selectedTextColor: "#fff",
+                  mainColor: "#49945A",
+                  textSecondaryColor: "#D4F3DB",
+                  borderColor: "rgba(122, 146, 165, 0.1)",
+                }}
+                current={presentDate}
+                selected={presentDate}
+                mode="datepicker"
+                minuteInterval={5}
+                style={{ borderRadius: 10 }}
+                onDateChange={(date) => handleSelectedEndDate(date)}
+              />
+            </View>
+          )}
+          <Button
+            value="Cancel"
+            onPress={handleCloseModal}
+          />
+        </View>
+      </View>
+    </Modal>
   );
 };
 
-export default DatePickers;
-
 const styles = StyleSheet.create({
-    container: {
-      flex: 1,
-      justifyContent: 'center',
-      alignItems: 'center',
-    },
-    datePicker: {
-      width: 200,
-      marginBottom: 20,
-    },
-    queryButton: {
-      backgroundColor: 'blue',
-      padding: 10,
-      borderRadius: 5,
-    },
-    queryButtonText: {
-      color: 'white',
-      fontWeight: 'bold',
-    },
-  });
-  
+  modalContainer: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+    backgroundColor: "rgba(0, 0, 0, 0.4)",
+  },
+  modalContent: {
+    width: "80%",
+    padding: 20,
+    backgroundColor: "white",
+    borderRadius: 10,
+    // alignItems: "center",
+  },
+  btnContainer: {
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    width: "100%",
+    marginBottom: 20,
+  },
+  btnContainer2: {
+    flexDirection: "row",
+    justifyContent: "space-evenly",
+    width: "100%",
+    marginBottom: 16,
+  },
+  btn: {
+    borderWidth: 1,
+    borderColor: "#49945A",
+    borderRadius: 3,
+    padding: 10,
+  },
+});
+
+export default DatePickers;

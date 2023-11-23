@@ -15,8 +15,6 @@ import ChatSvg from "../../assets/svg/chat.svg";
 
 const { height } = Dimensions.get("screen");
 
-console.log(Platform.OS);
-
 const DashboardScreen = () => {
   const theme = useTheme();
   const [recentActivities, setRecentActivities] = useState([]);
@@ -45,7 +43,7 @@ const DashboardScreen = () => {
             Good morning,
           </Texts>
           <Texts variant="h1" style={{ fontSize: theme.spacing.l }}>
-            Mariam
+            Maryam
           </Texts>
           <Texts
             variant="p"
@@ -99,19 +97,21 @@ const DashboardScreen = () => {
               marginBottom: theme.spacing.m,
             }}
           >
-          <View  style={{
-            borderRadius: theme.borderRadius.s,
-            backgroundColor: theme.colors.lighterGreen,
-          }}>
-            <Texts
-              variant="p"
+            <View
               style={{
-                ...styles.cardHeadertxt,
-                color: theme.colors.greenText,
+                borderRadius: theme.borderRadius.s,
+                backgroundColor: theme.colors.lighterGreen,
               }}
             >
-              Recent Activities
-            </Texts>
+              <Texts
+                variant="p"
+                style={{
+                  ...styles.cardHeadertxt,
+                  color: theme.colors.greenText,
+                }}
+              >
+                Recent Activities
+              </Texts>
             </View>
           </View>
           <View style={styles.activity_cont}>
@@ -156,7 +156,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: "100%",
-    paddingTop: 20
+    paddingTop: 20,
   },
   cardContainer1: {
     width: "100%",
