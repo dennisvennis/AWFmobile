@@ -12,10 +12,9 @@ import Texts from "../../components/Texts";
 import PieChart from "../../components/PieChart";
 import notificationDummy from "../../utils/notificationDummy.json";
 import ChatSvg from "../../assets/svg/chat.svg";
+import Notifications from "../../components/UI/Notifications";
 
 const { height } = Dimensions.get("screen");
-
-console.log(Platform.OS);
 
 const DashboardScreen = () => {
   const theme = useTheme();
@@ -45,7 +44,7 @@ const DashboardScreen = () => {
             Good morning,
           </Texts>
           <Texts variant="h1" style={{ fontSize: theme.spacing.l }}>
-            Mariam
+            Maryam
           </Texts>
           <Texts
             variant="p"
@@ -99,42 +98,26 @@ const DashboardScreen = () => {
               marginBottom: theme.spacing.m,
             }}
           >
-          <View  style={{
-            borderRadius: theme.borderRadius.s,
-            backgroundColor: theme.colors.lighterGreen,
-          }}>
-            <Texts
-              variant="p"
+            <View
               style={{
-                ...styles.cardHeadertxt,
-                color: theme.colors.greenText,
+                borderRadius: theme.borderRadius.s,
+                backgroundColor: theme.colors.lighterGreen,
               }}
             >
-              Recent Activities
-            </Texts>
+              <Texts
+                variant="p"
+                style={{
+                  ...styles.cardHeadertxt,
+                  color: theme.colors.greenText,
+                }}
+              >
+                Recent Activities
+              </Texts>
             </View>
           </View>
           <View style={styles.activity_cont}>
             {recentActivities.map((data) => (
-              <View style={styles.activity} key={data.id}>
-                <View style={styles.activity_img}>
-                  <ChatSvg width="20" height="20" />
-                </View>
-                <View style={styles.activity_text}>
-                  <Texts
-                    variant="p"
-                    style={{
-                      textTransform: "capitalize",
-                      color: "#84919A",
-                    }}
-                  >
-                    {data.title}
-                  </Texts>
-                  <Texts variant="p" style={{}}>
-                    {data.message}
-                  </Texts>
-                </View>
-              </View>
+              <Notifications  key={data.id} {...data}/>
             ))}
           </View>
         </View>
@@ -156,7 +139,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     width: "100%",
-    paddingTop: 20
+    paddingTop: 20,
   },
   cardContainer1: {
     width: "100%",

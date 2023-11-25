@@ -1,0 +1,43 @@
+[
+    {
+        "id": 1,
+        "category": "expense",
+        "title":"food payment",
+        "staff":"maryam modibbo",
+        "status": "approved",
+        "date": "2023-11-12T10:16:20.432Z"
+    },
+    {
+        "id": 5,
+        "category": "expense",
+        "title":"food payment",
+        "staff":"maryam modibbo",
+        "status": "rejected",
+        "date": "2023-11-12T10:16:20.432Z"
+    },
+    {
+        "id": 2,
+        "category": "expense",
+        "title":"food payment",
+        "staff":"maryam modibbo",
+        "status": "approved",
+        "date": "2023-11-12T10:16:20.432Z"
+    },
+    {
+        "id": 4,
+        "category": "expense",
+        "title":"food payment",
+        "staff":"maryam modibbo",
+        "status": "rejected",
+        "date": "2023-11-12T10:16:20.432Z"
+    },
+    {
+        "id": 3,
+        "category": "expense",
+        "title":"food payment",
+        "staff":"maryam modibbo",
+        "status": "approved",
+        "date": "2023-11-12T10:16:20.432Z"
+    }
+   
+]

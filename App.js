@@ -6,6 +6,7 @@ import { ThemeProvider, createText } from "@shopify/restyle";
 import theme from "./src/utils/theme";
 import { NavigationContainer } from "@react-navigation/native";
 import OnboardingNavigation from "./src/navigation/OnboardingNavigation";
+import Toast  from "react-native-toast-message";
 
 const Text = createText();
 
@@ -35,6 +36,7 @@ export default function App() {
       <OnboardingNavigation />
       <StatusBar style="auto" />
       </ThemeProvider>
+      <Toast />
     </NavigationContainer>
   );
 }
