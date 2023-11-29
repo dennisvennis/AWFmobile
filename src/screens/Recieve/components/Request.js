@@ -30,7 +30,7 @@ const Request = ({id,title,staff,status,date,category}) => {
   };
 
   return (
-    <TouchableOpacity activeOpacity={0.9} style={styles.container} onPress={()=> navigation.navigate('singlereceive',{requestId:id})}>
+    <TouchableOpacity activeOpacity={0.9} style={styles.container} onPress={()=> navigation.navigate('singlereceive',{requestId:id,requestStatus: status})}>
       <View style={styles.topSection}>
         <Texts
           style={{ ...styles.topSectionlft, color: theme.colors.greenText }}
@@ -38,7 +38,7 @@ const Request = ({id,title,staff,status,date,category}) => {
           {category}
         </Texts>
         <View style={[styles.topSectionrght,statusStyle()]}>
-          <Texts style={styles.topSectionrghtTxt}>{status}</Texts>
+          <Texts style={{...styles.topSectionrghtTxt,color: status==="pending"? "#8F5E14": "#fff"}}>{status}</Texts>
         </View>
       </View>
       <View style={styles.midSection}>
@@ -90,7 +90,7 @@ backgroundColor:"#F2C523"
   },
   topSectionrghtTxt: {
     textTransform: "capitalize",
-    color: "#fff",
+    // color: "#fff",
     fontWeight: 600,
   },
   midTxt1: {
