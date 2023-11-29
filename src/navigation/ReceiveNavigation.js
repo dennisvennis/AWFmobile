@@ -4,6 +4,7 @@ import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { CardStyleInterpolators } from "@react-navigation/stack";
 import transition from "../utils/transition";
 import ReceiveScreen from "../screens/Recieve/ReceiveScreen";
+import SingleReceiveScreen from "../screens/Recieve/SingleReceiveScreen";
 import OtherTabHeader from "../components/OtherTabHeader";
 import Notifications from "../screens/Notification";
 import NotificationHeader from "../components/NotificationHeader";
@@ -26,6 +27,24 @@ const ReceivedNavigation = () => {
           header: () => (
             <OtherTabHeader
               navigateTo="dashboard"
+              auth="auth"
+            />
+          ),
+          gestureDirection: "vertical",
+          transitionSpec: {
+            open: transition.config,
+            close: transition.closeConfig,
+          },
+          cardStyleInterpolator: Platform.OS === 'ios'? CardStyleInterpolators.forModalPresentationIOS: CardStyleInterpolators.forBottomSheetAndroid
+        }}
+      />
+      <Stack.Screen
+        name="singlereceive"
+        component={SingleReceiveScreen}
+        options={{
+          header: () => (
+            <OtherTabHeader
+              navigateTo="receive"
               auth="auth"
             />
           ),

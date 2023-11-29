@@ -85,8 +85,8 @@ const ReceiveScreen = () => {
               })}
             {data.length == 0 && (
               <View style={styles.notFound}>
-                <NotFoundSvg width={height * 0.08} height={height * 0.08} />
-                <Texts variant="h1" style={{...styles.notFoundTxt,paddingVertical: theme.spacing.m}}>No Requests</Texts>
+                <NotFoundSvg width={height * 0.06} height={height * 0.06} />
+                <Texts variant="p" style={{...styles.notFoundTxt,paddingVertical: theme.spacing.m}}>No Requests</Texts>
               </View>
             )}
           </View>
@@ -129,7 +129,7 @@ const styles = StyleSheet.create({
    height: height*0.25,
   },
   notFoundTxt:{
-    fontSize: height*0.025,
+    fontSize: height*0.02,
     textAlign:"center",
     color:"#A2AAB1"
   }
