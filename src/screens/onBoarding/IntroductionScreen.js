@@ -47,12 +47,11 @@ const IntroductionScreen = () => {
     if (currentIndex < slides.length - 1) {
       slidesRef.current.scrollToIndex({ index: currentIndex + 1 });
     } else {
-      // try {
-      //   await asyncStorage.storeData("viewedOnboarding", "true");
-      //   navigation.navigate("authNavigation");
-      // } catch (error) {
-      //   console.log(error);
-      // }
+      try {
+        await asyncStorage.storeData("viewedOnboarding", "true");
+      } catch (error) {
+        console.log(error);
+      }
     }
   };
 
@@ -61,17 +60,11 @@ const IntroductionScreen = () => {
       return;
     } else {
       slidesRef.current.scrollToIndex({ index: currentIndex - 1 });
-      // try {
-      //   await asyncStorage.storeData("viewedOnboarding", "true");
-      //   navigation.navigate("authNavigation");
-      // } catch (error) {
-      //   console.log(error);
-      // }
     }
   };
 
   const handleLogin = () => {
-    navigation.navigate("mainnavigation");
+    navigation.navigate("auth");
   };
 
   return (
@@ -103,7 +96,11 @@ const IntroductionScreen = () => {
       <Pagination data={slides} scrollX={scrollX} />
 
       {currentIndex === slides.length - 1 && (
-        <Button value="Login" style={styles.button} onPress={handleLogin} />
+        <Button
+          value="Get started"
+          style={styles.button}
+          onPress={handleLogin}
+        />
       )}
 
       <View style={styles.arrow}>

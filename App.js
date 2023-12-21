@@ -6,7 +6,9 @@ import { ThemeProvider, createText } from "@shopify/restyle";
 import theme from "./src/utils/theme";
 import { NavigationContainer } from "@react-navigation/native";
 import OnboardingNavigation from "./src/navigation/OnboardingNavigation";
-import Toast  from "react-native-toast-message";
+import { Provider } from "react-redux";
+import store from "./src/store/store";
+import Toast from "react-native-toast-message";
 
 const Text = createText();
 
@@ -31,13 +33,15 @@ export default function App() {
   }
 
   return (
-    <NavigationContainer>
-      <ThemeProvider theme={theme}>
-      <OnboardingNavigation />
-      <StatusBar style="auto" />
-      </ThemeProvider>
-      <Toast />
-    </NavigationContainer>
+    <Provider store={store}>
+      <NavigationContainer>
+        <ThemeProvider theme={theme}>
+          <OnboardingNavigation />
+          <StatusBar style="auto" />
+        </ThemeProvider>
+        <Toast />
+      </NavigationContainer>
+    </Provider>
   );
 }
 

@@ -5,16 +5,73 @@ import { useTheme } from "@shopify/restyle";
 import Texts from "../../components/Texts";
 import LoginSvg from "../../assets/svg/login.svg";
 import Button from "../../components/Button";
-const { height,width } = Dimensions.get("screen");
+import API_SERVICE from "../../utils/api";
+import * as Linking from "expo-linking";
+import * as AuthSession from "expo-auth-session";
+import { config } from "../../config/config";
+import asyncStorage from "../../utils/asyncStorage";
+import { setUsers } from "../../store/slices/usersSlice";
+import { useDispatch } from "react-redux";
+import axios from "axios";
+const { height, width } = Dimensions.get("screen");
+
+const authEndpoint = `${config.AUTH.authority}/oauth2/v2.0/authorize`;
+const clientId = config.AUTH.clientId;
+const redirectUri = Linking.createURL(config.AUTH.redirectUri);
 const Login = () => {
   const theme = useTheme();
   const navigation = useNavigation();
-  useEffect(() => {
-    navigation.navigate("auth");
-  }, []);
+  const dispatch = useDispatch();
+
+  const [request, response, promptAsync] = AuthSession.useAuthRequest(
+    {
+      redirectUri,
+      clientId,
+      responseType: AuthSession.ResponseType.Code,
+      scopes: ["openid", "profile", "User.Read"],
+      extraParams: { prompt: "select_account" },
+    },
+    { authorizationEndpoint: authEndpoint }
+  );
+
   const handleLogin = () => {
-    navigation.navigate("dashboard");
+    // Call promptAsync to initiate the authentication process
+    promptAsync();
   };
+
+  useEffect(() => {
+    const handleAuthResponse = async () => {
+      try {
+        if (response?.type === "success") {
+          // Handle the authentication result
+          console.log("Authentication result:", response.params.code);
+          let params = {
+            token: response.params.code,
+          };
+          const res = axios.post(`${config.API_BASE_URL}/auth/login`, params);
+
+          console.log("////RES", res);
+
+          // Dispatch the setUser action with the user data
+          // dispatch(setUsers(response));
+
+          // Save user data to AsyncStorage
+          // await asyncStorage.storeData("user", response);
+
+          // Navigate to the main navigation screen
+          navigation.navigate("mainnavigation");
+        } else if (response?.type === "cancel") {
+          console.log("Authentication cancelled");
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+
+    // Call the handleAuthResponse function when the response changes
+    handleAuthResponse();
+  }, [response]);
+
   return (
     <View style={{ ...styles.screen }}>
       <View style={styles.image_container}>
@@ -24,11 +81,19 @@ const Login = () => {
         <Texts variant="h1" style={{ textAlign: "center" }}>
           Bring Yor Work Together
         </Texts>
-        <Texts variant="p" style={{ textAlign: "center",marginVertical: theme.spacing.m,color: theme.colors.darkGreen, fontSize: width*0.04}}>
+        <Texts
+          variant="p"
+          style={{
+            textAlign: "center",
+            marginVertical: theme.spacing.m,
+            color: theme.colors.darkGreen,
+            fontSize: width * 0.04,
+          }}
+        >
           A better experience for your document approval processes.
         </Texts>
       </View>
-      <View style={{...styles.btn_container,marginTop: theme.spacing.xl}}>
+      <View style={{ ...styles.btn_container, marginTop: theme.spacing.xl }}>
         <Button value="Login" style={styles.button} onPress={handleLogin} />
       </View>
     </View>
@@ -44,7 +109,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   text_container: {
-    width: "70%"
+    width: "70%",
   },
   button: {
     paddingVertical: 7,

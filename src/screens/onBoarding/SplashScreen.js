@@ -2,16 +2,26 @@ import { StyleSheet, Text, View, Image, Dimensions } from "react-native";
 import React, { useEffect } from "react";
 import Images from "../../utils/images";
 import SplashImage from "../../assets/svg/splash.svg";
+import asyncStorage from "../../utils/asyncStorage";
+
 const { width } = Dimensions.get("screen");
+
 const SplashScreen = ({ navigation }) => {
-  useEffect(() => {
-    setTimeout(() => {
+  const updateScreen = async () => {
+    const value = await asyncStorage.getData("viewedOnboarding");
+    if (value) {
+      navigation.navigate("auth");
+    } else {
       navigation.navigate("introductionscreen");
-    }, 5000);
+    }
+  };
+
+  useEffect(() => {
+    setTimeout(updateScreen, 5000);
   });
   return (
     <View style={styles.screen}>
-      <Image style={styles.image} source={Images.spashImage} /> 
+      <Image style={styles.image} source={Images.spashImage} />
     </View>
   );
 };
@@ -23,10 +33,11 @@ const styles = StyleSheet.create({
     width,
     flex: 1,
     justifyContent: "flex-end",
-    backgroundColor: "#fff"
+    backgroundColor: "#fff",
   },
   image: {
     width: width,
     resizeMode: "cover",
-    height: "60%"  },
+    height: "60%",
+  },
 });

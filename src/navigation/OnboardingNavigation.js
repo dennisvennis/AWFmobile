@@ -1,5 +1,5 @@
-import { StyleSheet, Dimensions, Image , Platform} from "react-native";
-import React from "react";
+import { StyleSheet, Dimensions, Image, Platform } from "react-native";
+import { useState, useEffect } from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import transition from "../utils/transition";
 import { CardStyleInterpolators } from "@react-navigation/stack";
@@ -8,11 +8,29 @@ import IntroductionScreen from "../screens/onBoarding/IntroductionScreen";
 import MainNavigation from "./MainNavigation";
 import Images from "../utils/images";
 import AuthNavigation from "./AuthNavigation";
+import asyncStorage from "../utils/asyncStorage";
 const { width, height } = Dimensions.get("screen");
 
 const Stack = createNativeStackNavigator();
 
 const OnboardingNavigation = () => {
+  const [viewedOnboarding, setViewedOnboarding] = useState(false);
+
+  const checkOnboarding = async () => {
+    try {
+      const value = await asyncStorage.getData("viewedOnboarding");
+
+      if (value !== null) {
+        setViewedOnboarding(true);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
+
+  useEffect(() => {
+    checkOnboarding();
+  }, []);
   return (
     <Stack.Navigator
       screenOptions={{
@@ -31,10 +49,30 @@ const OnboardingNavigation = () => {
             open: transition.config,
             close: transition.closeConfig,
           },
-          cardStyleInterpolator: Platform.OS === 'ios'? CardStyleInterpolators.forModalPresentationIOS: CardStyleInterpolators.forBottomSheetAndroid
+          cardStyleInterpolator:
+            Platform.OS === "ios"
+              ? CardStyleInterpolators.forModalPresentationIOS
+              : CardStyleInterpolators.forBottomSheetAndroid,
         }}
       />
-      <Stack.Screen
+      {!viewedOnboarding && (
+        <Stack.Screen
+          name="introductionscreen"
+          component={IntroductionScreen}
+          options={{
+            gestureDirection: "vertical",
+            transitionSpec: {
+              open: transition.config,
+              close: transition.closeConfig,
+            },
+            cardStyleInterpolator:
+              Platform.OS === "ios"
+                ? CardStyleInterpolators.forModalPresentationIOS
+                : CardStyleInterpolators.forBottomSheetAndroid,
+          }}
+        />
+      )}
+      {/* <Stack.Screen
         name="introductionscreen"
         component={IntroductionScreen}
         options={{
@@ -45,7 +83,7 @@ const OnboardingNavigation = () => {
           },
           cardStyleInterpolator: Platform.OS === 'ios'? CardStyleInterpolators.forModalPresentationIOS: CardStyleInterpolators.forBottomSheetAndroid
         }}
-      />
+      /> */}
       <Stack.Screen
         name="auth"
         component={AuthNavigation}
@@ -63,7 +101,10 @@ const OnboardingNavigation = () => {
             open: transition.config,
             close: transition.closeConfig,
           },
-          cardStyleInterpolator: Platform.OS === 'ios'? CardStyleInterpolators.forModalPresentationIOS: CardStyleInterpolators.forBottomSheetAndroid
+          cardStyleInterpolator:
+            Platform.OS === "ios"
+              ? CardStyleInterpolators.forModalPresentationIOS
+              : CardStyleInterpolators.forBottomSheetAndroid,
         }}
       />
     </Stack.Navigator>
