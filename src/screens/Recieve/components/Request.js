@@ -8,11 +8,13 @@ import {
 import React from "react";
 import Texts from "../../../components/Texts";
 import { useTheme } from "@shopify/restyle";
+import { useNavigation } from "@react-navigation/native";
 
 const { width, height } = Dimensions.get("screen");
 
 const Request = ({id,title,staff,status,date,category}) => {
   const theme = useTheme();
+  const navigation = useNavigation()
 
   const statusStyle = () => {
     switch (status) {
@@ -28,7 +30,7 @@ const Request = ({id,title,staff,status,date,category}) => {
   };
 
   return (
-    <TouchableOpacity activeOpacity={0.9} style={styles.container}>
+    <TouchableOpacity activeOpacity={0.9} style={styles.container} onPress={()=> navigation.navigate('singlereceive',{requestId:id,requestStatus: status})}>
       <View style={styles.topSection}>
         <Texts
           style={{ ...styles.topSectionlft, color: theme.colors.greenText }}
@@ -36,7 +38,7 @@ const Request = ({id,title,staff,status,date,category}) => {
           {category}
         </Texts>
         <View style={[styles.topSectionrght,statusStyle()]}>
-          <Texts style={styles.topSectionrghtTxt}>{status}</Texts>
+          <Texts style={{...styles.topSectionrghtTxt,color: status==="pending"? "#8F5E14": "#fff"}}>{status}</Texts>
         </View>
       </View>
       <View style={styles.midSection}>
@@ -61,6 +63,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 16,
     paddingTop: 20,
+    marginBottom: height*0.025,
   },
   topSection: {
     width: "100%",
@@ -87,7 +90,7 @@ backgroundColor:"#F2C523"
   },
   topSectionrghtTxt: {
     textTransform: "capitalize",
-    color: "#fff",
+    // color: "#fff",
     fontWeight: 600,
   },
   midTxt1: {
