@@ -18,59 +18,67 @@ const { height, width } = Dimensions.get("screen");
 const authEndpoint = `${config.AUTH.authority}/oauth2/v2.0/authorize`;
 const clientId = config.AUTH.clientId;
 const redirectUri = Linking.createURL(config.AUTH.redirectUri);
+
 const Login = () => {
   const theme = useTheme();
   const navigation = useNavigation();
   const dispatch = useDispatch();
 
+  const discovery = AuthSession.useAutoDiscovery(
+    `${config.AUTH.authority}/v2.0`
+  );
   const [request, response, promptAsync] = AuthSession.useAuthRequest(
+    // {
+    //   redirectUri,
+    //   clientId,
+    //   responseType: AuthSession.ResponseType.Code,
+    //   scopes: ["openid", "profile", "User.Read"],
+    //   extraParams: { prompt: "select_account" },
+    // },
+    // { authorizationEndpoint: authEndpoint }
     {
-      redirectUri,
       clientId,
-      responseType: AuthSession.ResponseType.Code,
-      scopes: ["openid", "profile", "User.Read"],
-      extraParams: { prompt: "select_account" },
+      scopes: ["openid", "profile", "email", "offline_access"],
+      redirectUri,
     },
-    { authorizationEndpoint: authEndpoint }
+    discovery
   );
 
-  const handleLogin = () => {
-    // Call promptAsync to initiate the authentication process
-    promptAsync();
-  };
-
-  useEffect(() => {
-    const handleAuthResponse = async () => {
-      try {
-        if (response?.type === "success") {
-          // Handle the authentication result
-          console.log("Authentication result:", response.params.code);
+  const handleLogin = async () => {
+    promptAsync().then((codeResponse) => {
+      if (request && codeResponse?.type === "success" && discovery) {
+        AuthSession.exchangeCodeAsync(
+          {
+            clientId,
+            code: codeResponse.params.code,
+            extraParams: request.codeVerifier
+              ? { code_verifier: request.codeVerifier }
+              : undefined,
+            redirectUri,
+          },
+          discovery
+        ).then(async (res) => {
+          console.log("//////SOmething", res.accessToken);
           let params = {
-            token: response.params.code,
+            token: res.accessToken,
           };
-          const res = axios.post(`${config.API_BASE_URL}/auth/login`, params);
-
-          console.log("////RES", res);
-
+          const response = await axios.post(
+            `${config.API_BASE_URL}/auth/login`,
+            params
+          );
+          console.log("////RES", response);
           // Dispatch the setUser action with the user data
           // dispatch(setUsers(response));
-
           // Save user data to AsyncStorage
           // await asyncStorage.storeData("user", response);
-
           // Navigate to the main navigation screen
-          navigation.navigate("mainnavigation");
-        } else if (response?.type === "cancel") {
-          console.log("Authentication cancelled");
-        }
-      } catch (error) {
-        console.log(error.message);
+          // navigation.navigate("mainnavigation");
+        });
+      } else if (codeResponse?.type === "cancel") {
+        console.log("Authentication cancelled");
       }
-    };
-
-    // Call the handleAuthResponse function when the response changes
-    handleAuthResponse();
-  }, [response]);
+    });
+  };
 
   return (
     <View style={{ ...styles.screen }}>
