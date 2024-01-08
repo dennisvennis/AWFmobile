@@ -28,17 +28,10 @@ const Login = () => {
     `${config.AUTH.authority}/v2.0`
   );
   const [request, response, promptAsync] = AuthSession.useAuthRequest(
-    // {
-    //   redirectUri,
-    //   clientId,
-    //   responseType: AuthSession.ResponseType.Code,
-    //   scopes: ["openid", "profile", "User.Read"],
-    //   extraParams: { prompt: "select_account" },
-    // },
-    // { authorizationEndpoint: authEndpoint }
     {
       clientId,
-      scopes: ["openid", "profile", "email", "offline_access"],
+      // scopes: ["openid", "profile", "email", "offline_access"],
+      scopes: [`${clientId}/.default`],
       redirectUri,
     },
     discovery
@@ -58,7 +51,7 @@ const Login = () => {
           },
           discovery
         ).then(async (res) => {
-          console.log("//////SOmething", res.accessToken);
+          console.log("//////SOmething", res.accessToken, res.expiresIn);
           let params = {
             token: res.accessToken,
           };
