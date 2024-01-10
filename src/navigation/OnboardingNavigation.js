@@ -1,5 +1,6 @@
 import { StyleSheet, Dimensions, Image, Platform } from "react-native";
 import { useState, useEffect } from "react";
+import { useSelector } from "react-redux";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import transition from "../utils/transition";
 import { CardStyleInterpolators } from "@react-navigation/stack";
@@ -8,6 +9,7 @@ import IntroductionScreen from "../screens/onBoarding/IntroductionScreen";
 import MainNavigation from "./MainNavigation";
 import Images from "../utils/images";
 import AuthNavigation from "./AuthNavigation";
+import CombineNavigation from "./CombineNavigation";
 import asyncStorage from "../utils/asyncStorage";
 const { width, height } = Dimensions.get("screen");
 
@@ -15,6 +17,8 @@ const Stack = createNativeStackNavigator();
 
 const OnboardingNavigation = () => {
   const [viewedOnboarding, setViewedOnboarding] = useState(false);
+
+  const { isAuthenticated, user } = useSelector((state) => state.auth);
 
   const checkOnboarding = async () => {
     try {
@@ -72,41 +76,133 @@ const OnboardingNavigation = () => {
           }}
         />
       )}
-      {/* <Stack.Screen
-        name="introductionscreen"
-        component={IntroductionScreen}
-        options={{
-          gestureDirection: "vertical",
-          transitionSpec: {
-            open: transition.config,
-            close: transition.closeConfig,
-          },
-          cardStyleInterpolator: Platform.OS === 'ios'? CardStyleInterpolators.forModalPresentationIOS: CardStyleInterpolators.forBottomSheetAndroid
-        }}
-      /> */}
+
       <Stack.Screen
-        name="auth"
-        component={AuthNavigation}
+        name="combineNavigation"
+        component={CombineNavigation}
         options={{
           headerShown: false,
         }}
       />
-      <Stack.Screen
-        name="mainnavigation"
-        component={MainNavigation}
-        options={{
-          headerShown: false,
-          gestureDirection: "vertical",
-          transitionSpec: {
-            open: transition.config,
-            close: transition.closeConfig,
-          },
-          cardStyleInterpolator:
-            Platform.OS === "ios"
-              ? CardStyleInterpolators.forModalPresentationIOS
-              : CardStyleInterpolators.forBottomSheetAndroid,
-        }}
-      />
+      {/* {isLoggedIn ? (
+        <>
+          <Stack.Screen
+            name="splashscreen"
+            component={SplashScreen}
+            options={{
+              headerShown: false,
+              gestureDirection: "vertical",
+              transitionSpec: {
+                open: transition.config,
+                close: transition.closeConfig,
+              },
+              cardStyleInterpolator:
+                Platform.OS === "ios"
+                  ? CardStyleInterpolators.forModalPresentationIOS
+                  : CardStyleInterpolators.forBottomSheetAndroid,
+            }}
+          />
+          {!viewedOnboarding && (
+            <Stack.Screen
+              name="introductionscreen"
+              component={IntroductionScreen}
+              options={{
+                gestureDirection: "vertical",
+                transitionSpec: {
+                  open: transition.config,
+                  close: transition.closeConfig,
+                },
+                cardStyleInterpolator:
+                  Platform.OS === "ios"
+                    ? CardStyleInterpolators.forModalPresentationIOS
+                    : CardStyleInterpolators.forBottomSheetAndroid,
+              }}
+            />
+          )}
+          <Stack.Screen
+            name="mainnavigation"
+            component={MainNavigation}
+            options={{
+              headerShown: false,
+              gestureDirection: "vertical",
+              transitionSpec: {
+                open: transition.config,
+                close: transition.closeConfig,
+              },
+              cardStyleInterpolator:
+                Platform.OS === "ios"
+                  ? CardStyleInterpolators.forModalPresentationIOS
+                  : CardStyleInterpolators.forBottomSheetAndroid,
+            }}
+          />
+          <Stack.Screen
+            name="auth"
+            component={AuthNavigation}
+            options={{
+              headerShown: false,
+            }}
+          />
+        </>
+      ) : (
+        <>
+          <Stack.Screen
+            name="splashscreen"
+            component={SplashScreen}
+            options={{
+              headerShown: false,
+              gestureDirection: "vertical",
+              transitionSpec: {
+                open: transition.config,
+                close: transition.closeConfig,
+              },
+              cardStyleInterpolator:
+                Platform.OS === "ios"
+                  ? CardStyleInterpolators.forModalPresentationIOS
+                  : CardStyleInterpolators.forBottomSheetAndroid,
+            }}
+          />
+          {!viewedOnboarding && (
+            <Stack.Screen
+              name="introductionscreen"
+              component={IntroductionScreen}
+              options={{
+                gestureDirection: "vertical",
+                transitionSpec: {
+                  open: transition.config,
+                  close: transition.closeConfig,
+                },
+                cardStyleInterpolator:
+                  Platform.OS === "ios"
+                    ? CardStyleInterpolators.forModalPresentationIOS
+                    : CardStyleInterpolators.forBottomSheetAndroid,
+              }}
+            />
+          )}
+          <Stack.Screen
+            name="auth"
+            component={AuthNavigation}
+            options={{
+              headerShown: false,
+            }}
+          />
+          <Stack.Screen
+            name="mainnavigation"
+            component={MainNavigation}
+            options={{
+              headerShown: false,
+              gestureDirection: "vertical",
+              transitionSpec: {
+                open: transition.config,
+                close: transition.closeConfig,
+              },
+              cardStyleInterpolator:
+                Platform.OS === "ios"
+                  ? CardStyleInterpolators.forModalPresentationIOS
+                  : CardStyleInterpolators.forBottomSheetAndroid,
+            }}
+          />
+        </>
+      )} */}
     </Stack.Navigator>
   );
 };

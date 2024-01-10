@@ -11,17 +11,32 @@ import React from "react";
 import LogoutIcon from "../assets/svg/logout.svg";
 import { useTheme } from "@shopify/restyle";
 import { useNavigation } from "@react-navigation/native";
+import { useDispatch } from "react-redux";
+import { clearUser } from "../store/slices/usersSlice";
+import asyncStorage from "../utils/asyncStorage";
 
 const { width, height } = Dimensions.get("screen");
 
-const FirstTabHeader = ({auth}) => {
+const FirstTabHeader = ({ auth }) => {
   const theme = useTheme();
-  const navigation = useNavigation()
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
+
+  const handleLogout = async () => {
+    dispatch(clearUser());
+    await asyncStorage.clearData("token");
+    navigation.navigate("combineNavigation");
+  };
+
   return (
     <View style={styles.mainContainer}>
       <Image source={Images.onBoardHeader} style={styles.imageMain} />
       <View style={{ ...styles.containerHead, padding: theme.spacing.l }}>
-        <TouchableOpacity style={styles.notifyicon} onPress={()=> navigation.navigate(auth)} activeOpacity={0.9}>
+        <TouchableOpacity
+          style={styles.notifyicon}
+          onPress={handleLogout}
+          activeOpacity={0.9}
+        >
           <LogoutIcon />
         </TouchableOpacity>
       </View>

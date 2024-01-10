@@ -1,11 +1,10 @@
 import { StyleSheet, Dimensions, View } from "react-native";
-import React, { useEffect } from "react";
+import React, { useState, useEffect } from "react";
 import { useNavigation } from "@react-navigation/native";
 import { useTheme } from "@shopify/restyle";
 import Texts from "../../components/Texts";
 import LoginSvg from "../../assets/svg/login.svg";
 import Button from "../../components/Button";
-import API_SERVICE from "../../utils/api";
 import * as Linking from "expo-linking";
 import * as AuthSession from "expo-auth-session";
 import { config } from "../../config/config";
@@ -13,6 +12,8 @@ import asyncStorage from "../../utils/asyncStorage";
 import { setUsers } from "../../store/slices/usersSlice";
 import { useDispatch } from "react-redux";
 import axios from "axios";
+import { decode as base64Decode } from "base-64";
+
 const { height, width } = Dimensions.get("screen");
 
 const authEndpoint = `${config.AUTH.authority}/oauth2/v2.0/authorize`;
@@ -20,6 +21,7 @@ const clientId = config.AUTH.clientId;
 const redirectUri = Linking.createURL(config.AUTH.redirectUri);
 
 const Login = () => {
+  const [loading, setLoading] = useState(false);
   const theme = useTheme();
   const navigation = useNavigation();
   const dispatch = useDispatch();
@@ -30,14 +32,14 @@ const Login = () => {
   const [request, response, promptAsync] = AuthSession.useAuthRequest(
     {
       clientId,
-      // scopes: ["openid", "profile", "email", "offline_access"],
-      scopes: [`${clientId}/.default`],
+      scopes: [`${config.AUTH.scopeUrl}`],
       redirectUri,
     },
     discovery
   );
 
   const handleLogin = async () => {
+    setLoading(true);
     promptAsync().then((codeResponse) => {
       if (request && codeResponse?.type === "success" && discovery) {
         AuthSession.exchangeCodeAsync(
@@ -51,24 +53,57 @@ const Login = () => {
           },
           discovery
         ).then(async (res) => {
-          console.log("//////SOmething", res.accessToken, res.expiresIn);
           let params = {
             token: res.accessToken,
           };
-          const response = await axios.post(
-            `${config.API_BASE_URL}/auth/login`,
-            params
-          );
-          console.log("////RES", response);
-          // Dispatch the setUser action with the user data
-          // dispatch(setUsers(response));
-          // Save user data to AsyncStorage
-          // await asyncStorage.storeData("user", response);
-          // Navigate to the main navigation screen
-          // navigation.navigate("mainnavigation");
+          try {
+            const {
+              data: {
+                status,
+                data: { accessToken },
+              },
+            } = await axios.post(`${config.API_BASE_URL}/auth/login`, params);
+            if (status === "success") {
+              setLoading(false);
+              const base64Decoded = base64Decode(accessToken.split(".")[1]);
+              const decodedToken = JSON.parse(base64Decoded);
+              let {
+                firstName,
+                lastName,
+                imageUrl,
+                email,
+                departmentId,
+                exp: expiresIn,
+                id: userId,
+                role: { name: roleName, id: roleId },
+              } = decodedToken;
+              let userInfo = {
+                userId,
+                firstName,
+                lastName,
+                imageUrl,
+                email,
+                departmentId,
+                expiresIn,
+                roleName,
+                roleId,
+              };
+              // Dispatch the setUser action with the user data
+              dispatch(setUsers(userInfo));
+              // Save user data to AsyncStorage
+              await asyncStorage.storeData("token", accessToken);
+              // Navigate to the main navigation screen
+              navigation.navigate("combineNavigation");
+            } else {
+              setLoading(false);
+            }
+          } catch (error) {
+            setLoading(false);
+          }
         });
       } else if (codeResponse?.type === "cancel") {
         console.log("Authentication cancelled");
+        setLoading(false);
       }
     });
   };
@@ -95,7 +130,11 @@ const Login = () => {
         </Texts>
       </View>
       <View style={{ ...styles.btn_container, marginTop: theme.spacing.xl }}>
-        <Button value="Login" style={styles.button} onPress={handleLogin} />
+        <Button
+          value={loading ? "Verifying credentials..." : "Login"}
+          style={styles.button}
+          onPress={handleLogin}
+        />
       </View>
     </View>
   );

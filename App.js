@@ -1,20 +1,24 @@
-import { useEffect, useState } from "react";
+import { useEffect, useState, useRef } from "react";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, View, SafeAreaView } from "react-native";
+import { StyleSheet, AppState, View, SafeAreaView } from "react-native";
 import * as Font from "expo-font";
 import { ThemeProvider, createText } from "@shopify/restyle";
 import theme from "./src/utils/theme";
 import { NavigationContainer } from "@react-navigation/native";
+import { useNavigation } from "@react-navigation/native";
 import OnboardingNavigation from "./src/navigation/OnboardingNavigation";
+import { useDispatch, useSelector } from "react-redux";
 import { Provider } from "react-redux";
 import store from "./src/store/store";
+import { clearUser } from "./src/store/slices/usersSlice";
 import Toast from "react-native-toast-message";
+import { PersistGate } from "redux-persist/integration/react";
+import { persistStore } from "redux-persist";
 
 const Text = createText();
 
-export default function App() {
+export default function AppWrapper() {
   const [fontsLoaded, setFontsLoaded] = useState(false);
-
   //LOADING FONTS TO THE APP
   let customFonts = {
     "Inter-Black": require("./assets/fonts/Inter-Black.ttf"),
@@ -32,18 +36,71 @@ export default function App() {
     return null;
   }
 
+  let persistor = persistStore(store);
   return (
     <Provider store={store}>
-      <NavigationContainer>
-        <ThemeProvider theme={theme}>
-          <OnboardingNavigation />
-          <StatusBar style="auto" />
-        </ThemeProvider>
-        <Toast />
-      </NavigationContainer>
+      <PersistGate persistor={persistor}>
+        <NavigationContainer>
+          <ThemeProvider theme={theme}>
+            <App />
+          </ThemeProvider>
+          <Toast />
+        </NavigationContainer>
+      </PersistGate>
     </Provider>
   );
 }
+
+const App = () => {
+  const navigation = useNavigation();
+  const dispatch = useDispatch();
+  let inactivityTimeout = null;
+
+  const startInactivityTimeout = () => {
+    inactivityTimeout = setTimeout(handleInactivityTimeout, 60 * 1000 * 15);
+  };
+
+  const clearInactivityTimeout = () => {
+    if (inactivityTimeout) {
+      clearTimeout(inactivityTimeout);
+    }
+  };
+
+  const resetInactivityTimeout = () => {
+    clearInactivityTimeout();
+    startInactivityTimeout();
+  };
+
+  const handleAppStateChange = (nextAppState) => {
+    if (nextAppState === "active") {
+      resetInactivityTimeout();
+    } else {
+      clearInactivityTimeout();
+    }
+  };
+
+  const handleInactivityTimeout = () => {
+    // Perform any logout or other action upon timeout
+    dispatch(clearUser());
+    navigation.navigate("combineNavigation");
+  };
+
+  useEffect(() => {
+    AppState.addEventListener("change", handleAppStateChange);
+    startInactivityTimeout();
+
+    return () => {
+      clearInactivityTimeout();
+    };
+  }, [clearUser]);
+
+  return (
+    <>
+      <OnboardingNavigation />
+      <StatusBar style="auto" />
+    </>
+  );
+};
 
 const styles = StyleSheet.create({
   container: {

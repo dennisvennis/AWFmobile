@@ -13,20 +13,44 @@ import PieChart from "../../components/PieChart";
 import notificationDummy from "../../utils/notificationDummy.json";
 import ChatSvg from "../../assets/svg/chat.svg";
 import Notifications from "../../components/UI/Notifications";
+import { useSelector } from "react-redux";
+import SkeletonLoader from "../../components/SkeletonLoader";
+import ApiServices from "../../services/ApiServices";
 
 const { height } = Dimensions.get("screen");
 
 const DashboardScreen = () => {
   const theme = useTheme();
   const [recentActivities, setRecentActivities] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [notification, setNotification] = useState([]);
+
+  const { user } = useSelector((state) => state.auth);
 
   useEffect(() => {
-    const selectedActivities = notificationDummy.filter(
-      (data, index) => index < 5
-    );
-    setRecentActivities(selectedActivities);
+    const fecthData = async () => {
+      setIsLoading(true);
+      try {
+        const {
+          data: { content },
+          status,
+        } = await ApiServices.getAllNotifications(5, 0, false);
+        if (status === 200) {
+          setNotification(content);
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fecthData();
   }, []);
-  return (
+
+  return isLoading ? (
+    <View style={{ ...styles.screen, paddingHorizontal: theme.spacing.l }}>
+      <SkeletonLoader />
+    </View>
+  ) : (
     <View style={{ ...styles.screen, paddingHorizontal: theme.spacing.l }}>
       <ScrollView
         showsVerticalScrollIndicator={false}
@@ -44,7 +68,7 @@ const DashboardScreen = () => {
             Good morning,
           </Texts>
           <Texts variant="h1" style={{ fontSize: theme.spacing.l }}>
-            Maryam
+            {user?.firstName}
           </Texts>
           <Texts
             variant="p"
@@ -116,9 +140,23 @@ const DashboardScreen = () => {
             </View>
           </View>
           <View style={styles.activity_cont}>
-            {recentActivities.map((data) => (
-              <Notifications  key={data.id} {...data}/>
-            ))}
+            {notification?.length >= 1 ? (
+              notification.map((data) => (
+                <Notifications key={data.id} {...data} />
+              ))
+            ) : (
+              <View>
+                <Texts
+                  variant="p"
+                  style={{
+                    ...styles.activitytxt,
+                    // color: theme.colors.greenText,
+                  }}
+                >
+                  No Recent Activities
+                </Texts>
+              </View>
+            )}
           </View>
         </View>
       </ScrollView>
@@ -163,6 +201,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: height * 0.01,
     fontSize: height * 0.016,
   },
+
   activitesHeader: {
     width: "100%",
     padding: 1,
@@ -175,5 +214,11 @@ const styles = StyleSheet.create({
     flexDirection: "row",
     alignItems: "flex-end",
     gap: height * 0.019,
+  },
+  activitytxt: {
+    paddingVertical: height * 0.003,
+    paddingHorizontal: height * 0.01,
+    fontSize: height * 0.019,
+    color: "#555",
   },
 });

@@ -9,5 +9,6 @@ export const config = {
     authority: `${process.env.EXPO_PUBLIC_AUTH_AZURE_CLOUD_ID}/${process.env.EXPO_PUBLIC_AUTH_TENANT_ID}`,
     postLogoutRedirectUri: `${process.env.EXPO_PUBLIC_APP_HOME}`,
     redirectUri: `${process.env.EXPO_PUBLIC_APP_HOME}`,
+    scopeUrl: `${process.env.EXPO_PUBLIC_AUTH_AZURE_SCOPE_URL}`,
   },
 };

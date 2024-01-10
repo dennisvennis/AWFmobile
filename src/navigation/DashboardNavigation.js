@@ -1,23 +1,22 @@
-import { StyleSheet , Platform} from "react-native";
+import { StyleSheet, Platform } from "react-native";
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import transition from "../utils/transition";
-import {CardStyleInterpolators} from "@react-navigation/stack";
+import { CardStyleInterpolators } from "@react-navigation/stack";
 import DashboardScreen from "../screens/Dashboard/DashboardScreen";
 import FirstTabHeader from "../components/FirstTabHeader";
-import Notifications from "../screens/Notification";
-import NotificationHeader from "../components/NotificationHeader";
 import { useTheme } from "@shopify/restyle";
-import AuthNavigation from "./AuthNavigation";
 const Stack = createNativeStackNavigator();
 
 const DashboardNavigation = () => {
-  const theme = useTheme()
+  const theme = useTheme();
   return (
-    <Stack.Navigator screenOptions={{
-      headerTransparent: true,
-      contentStyle: { backgroundColor: theme.colors.mainBackground}
-    }} >
+    <Stack.Navigator
+      screenOptions={{
+        headerTransparent: true,
+        contentStyle: { backgroundColor: theme.colors.mainBackground },
+      }}
+    >
       <Stack.Screen
         name="dashboard"
         component={DashboardScreen}
@@ -28,10 +27,12 @@ const DashboardNavigation = () => {
             open: transition.config,
             close: transition.closeConfig,
           },
-          cardStyleInterpolator: Platform.OS === 'ios'? CardStyleInterpolators.forModalPresentationIOS: CardStyleInterpolators.forBottomSheetAndroid
+          cardStyleInterpolator:
+            Platform.OS === "ios"
+              ? CardStyleInterpolators.forModalPresentationIOS
+              : CardStyleInterpolators.forBottomSheetAndroid,
         }}
       />
-
     </Stack.Navigator>
   );
 };

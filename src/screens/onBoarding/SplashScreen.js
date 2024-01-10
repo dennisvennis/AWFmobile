@@ -3,14 +3,13 @@ import React, { useEffect } from "react";
 import Images from "../../utils/images";
 import SplashImage from "../../assets/svg/splash.svg";
 import asyncStorage from "../../utils/asyncStorage";
-
 const { width } = Dimensions.get("screen");
 
 const SplashScreen = ({ navigation }) => {
   const updateScreen = async () => {
     const value = await asyncStorage.getData("viewedOnboarding");
     if (value) {
-      navigation.navigate("auth");
+      navigation.navigate("combineNavigation");
     } else {
       navigation.navigate("introductionscreen");
     }

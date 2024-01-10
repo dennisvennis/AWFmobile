@@ -1,7 +1,17 @@
-import CountReducer from "./slices/countSlice";
+import UserReducer from "./slices/usersSlice";
+import AsyncStorage from "@react-native-async-storage/async-storage";
+import { persistReducer } from "redux-persist";
+import { combineReducers } from "@reduxjs/toolkit";
 
-const rootReducer = {
-  counter: CountReducer,
+const persisConfig = {
+  key: "root",
+  version: 1,
+  storage: AsyncStorage,
 };
+const rootReducer = combineReducers({
+  auth: UserReducer,
+});
 
-export default rootReducer;
+const persistedReducer = persistReducer(persisConfig, rootReducer);
+
+export default persistedReducer;

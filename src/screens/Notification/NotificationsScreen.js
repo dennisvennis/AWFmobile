@@ -3,50 +3,86 @@ import React, { useEffect, useState } from "react";
 import { useTheme } from "@shopify/restyle";
 import Notifications from "../../components/UI/Notifications";
 import Texts from "../../components/Texts";
+import ApiServices from "../../services/ApiServices";
+import NotFoundSvg from "../../assets/svg/notFound.svg";
 const { width, height } = Dimensions.get("screen");
 
 const NotificationsScreen = () => {
   const theme = useTheme();
-  const [notifications, setNotifications] = useState([]);
+  const [isLoading, setIsLoading] = useState(true);
+  const [notification, setNotification] = useState([]);
 
   useEffect(() => {
-    const data = require("../../utils/notificationDummy.json");
-    setNotifications(data);
+    const fecthData = async () => {
+      setIsLoading(true);
+      try {
+        const {
+          data: { content },
+          status,
+        } = await ApiServices.getAllNotifications(5, 0, false);
+        if (status === 200) {
+          setNotification(content);
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fecthData();
   }, []);
 
-  return (
+  return isLoading ? (
     <View style={{ ...styles.screen, paddingHorizontal: theme.spacing.l }}>
-    <View
-      style={{
-        ...styles.activitesHeader,
-        marginBottom: theme.spacing.m,
-      }}
-    >
+      <SkeletonLoader />
+    </View>
+  ) : (
+    <View style={{ ...styles.screen, paddingHorizontal: theme.spacing.l }}>
       <View
         style={{
-          borderRadius: theme.borderRadius.s,
-          backgroundColor: theme.colors.lighterGreen,
+          ...styles.activitesHeader,
+          marginBottom: theme.spacing.m,
         }}
       >
-        <Texts
-          variant="p"
+        <View
           style={{
-            ...styles.cardHeadertxt,
-            color: theme.colors.greenText,
+            borderRadius: theme.borderRadius.s,
+            backgroundColor: theme.colors.lighterGreen,
           }}
         >
-         Notifications
-        </Texts>
+          <Texts
+            variant="p"
+            style={{
+              ...styles.cardHeadertxt,
+              color: theme.colors.greenText,
+            }}
+          >
+            Notifications
+          </Texts>
+        </View>
       </View>
-    </View>
       <ScrollView
         showsVerticalScrollIndicator={false}
         style={{ ...styles.container }}
       >
         <View style={styles.activity_cont}>
-          {notifications.map((data) => (
-            <Notifications key={data.id} {...data} style={styles.notify}/>
-          ))}
+          {notification?.length >= 1 ? (
+            notification.map((data) => (
+              <Notifications key={data.id} {...data} />
+            ))
+          ) : (
+            <View style={styles.notFound}>
+              <NotFoundSvg width={height * 0.06} height={height * 0.06} />
+              <Texts
+                variant="p"
+                style={{
+                  ...styles.notFoundTxt,
+                  paddingVertical: theme.spacing.m,
+                }}
+              >
+                No Requests
+              </Texts>
+            </View>
+          )}
         </View>
       </ScrollView>
     </View>
@@ -61,7 +97,7 @@ const styles = StyleSheet.create({
     paddingTop: 130,
     alignItems: "center",
     justifyContent: "center",
-    paddingBottom: 20
+    paddingBottom: 20,
   },
   container: {
     flex: 1,
@@ -84,7 +120,7 @@ const styles = StyleSheet.create({
     width: "100%",
     padding: 1,
     alignItems: "flex-start",
-    marginTop: 15
+    marginTop: 15,
   },
   activity_cont: {
     rowGap: height * 0.02,
@@ -94,9 +130,20 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
     gap: height * 0.019,
   },
-  notify:{
+  notify: {
     borderBottomWidth: 1,
     borderBottomColor: "#ECECEC",
-    paddingBottom: 16
-  }
+    paddingBottom: 16,
+  },
+  notFound: {
+    alignItems: "center",
+    justifyContent: "center",
+    flex: 1,
+    height: height * 0.25,
+  },
+  notFoundTxt: {
+    fontSize: height * 0.02,
+    textAlign: "center",
+    color: "#A2AAB1",
+  },
 });
