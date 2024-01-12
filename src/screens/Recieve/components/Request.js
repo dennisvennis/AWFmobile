@@ -9,20 +9,21 @@ import React from "react";
 import Texts from "../../../components/Texts";
 import { useTheme } from "@shopify/restyle";
 import { useNavigation } from "@react-navigation/native";
+import { dateFormatter } from "../../../utils/dateFormatter";
 
 const { width, height } = Dimensions.get("screen");
 
-const Request = ({id,title,staff,status,date,category}) => {
+const Request = ({ id, title, dasTypes, requester, status, createdAt }) => {
   const theme = useTheme();
-  const navigation = useNavigation()
+  const navigation = useNavigation();
 
   const statusStyle = () => {
     switch (status) {
-      case 'approved':
+      case "approved":
         return styles.successStyle;
-      case 'rejected':
+      case "rejected":
         return styles.failureStyle;
-      case 'pending':
+      case "pending":
         return styles.pendingStyle;
       default:
         return styles.defaultStyle;
@@ -30,24 +31,44 @@ const Request = ({id,title,staff,status,date,category}) => {
   };
 
   return (
-    <TouchableOpacity activeOpacity={0.9} style={styles.container} onPress={()=> navigation.navigate('singlereceive',{requestId:id,requestStatus: status})}>
+    <TouchableOpacity
+      activeOpacity={0.9}
+      style={styles.container}
+      onPress={() =>
+        navigation.navigate("singlereceive", {
+          requestId: id,
+          requestStatus: status,
+        })
+      }
+    >
       <View style={styles.topSection}>
         <Texts
           style={{ ...styles.topSectionlft, color: theme.colors.greenText }}
         >
-          {category}
+          {dasTypes}
         </Texts>
-        <View style={[styles.topSectionrght,statusStyle()]}>
-          <Texts style={{...styles.topSectionrghtTxt,color: status==="pending"? "#8F5E14": "#fff"}}>{status}</Texts>
+        <View style={[styles.topSectionrght, statusStyle()]}>
+          <Texts
+            style={{
+              ...styles.topSectionrghtTxt,
+              color: status === "pending" ? "#8F5E14" : "#fff",
+            }}
+          >
+            {status}
+          </Texts>
         </View>
       </View>
       <View style={styles.midSection}>
         <Texts style={styles.midTxt1}>{title}</Texts>
-        <Texts style={styles.midTxt2}>{staff}</Texts>
+        <Texts style={styles.midTxt2}>
+          {requester.firstName} {requester.lastName}
+        </Texts>
       </View>
       <View style={styles.lstSection}>
-        <Texts style={{...styles.lstSectionTxt,color:theme.colors.greenText}}>
-          september 29,20203, 11:29:46 AM
+        <Texts
+          style={{ ...styles.lstSectionTxt, color: theme.colors.greenText }}
+        >
+          {dateFormatter(createdAt)}
         </Texts>
       </View>
     </TouchableOpacity>
@@ -63,7 +84,7 @@ const styles = StyleSheet.create({
     borderRadius: 5,
     padding: 16,
     paddingTop: 20,
-    marginBottom: height*0.025,
+    marginBottom: height * 0.025,
   },
   topSection: {
     width: "100%",
@@ -79,14 +100,14 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderRadius: 8,
   },
-  successStyle:{
-backgroundColor:"#49945A"
+  successStyle: {
+    backgroundColor: "#49945A",
   },
-  failureStyle:{
-backgroundColor:"#ED3232"
+  failureStyle: {
+    backgroundColor: "#ED3232",
   },
-  pendingStyle:{
-backgroundColor:"#F2C523"
+  pendingStyle: {
+    backgroundColor: "#F2C523",
   },
   topSectionrghtTxt: {
     textTransform: "capitalize",
@@ -98,17 +119,17 @@ backgroundColor:"#F2C523"
     fontSize: height * 0.022,
     textTransform: "capitalize",
   },
-  midTxt2:{
-    textTransform:"capitalize"
+  midTxt2: {
+    textTransform: "capitalize",
   },
-  lstSection:{
-    marginTop: height*0.02,
-    borderTopWidth:1,
+  lstSection: {
+    marginTop: height * 0.02,
+    borderTopWidth: 1,
     borderTopColor: "#E0ECE1",
-    paddingTop:height*0.02
+    paddingTop: height * 0.02,
   },
-  lstSectionTxt:{
-    fontWeight:600,
-    textTransform:"capitalize"
-  }
+  lstSectionTxt: {
+    fontWeight: 600,
+    textTransform: "capitalize",
+  },
 });

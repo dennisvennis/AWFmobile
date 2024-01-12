@@ -64,7 +64,7 @@ const IntroductionScreen = () => {
   };
 
   const handleLogin = () => {
-    navigation.navigate("auth");
+    navigation.navigate("combineNavigation");
   };
 
   return (

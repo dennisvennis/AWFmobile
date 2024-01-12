@@ -21,7 +21,7 @@ const DashboardNavigation = () => {
         name="dashboard"
         component={DashboardScreen}
         options={{
-          header: () => <FirstTabHeader auth="auth" />,
+          header: () => <FirstTabHeader auth="combineNavigation" />,
           gestureDirection: "vertical",
           transitionSpec: {
             open: transition.config,

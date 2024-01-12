@@ -11,22 +11,40 @@ import Images from "../utils/images";
 import ArrowBack from "../assets/svg/arrowLeft.svg";
 import LogoutIcon from "../assets/svg/logout.svg";
 import { useTheme } from "@shopify/restyle";
+import { useDispatch } from "react-redux";
+import { clearUser } from "../store/slices/usersSlice";
+import asyncStorage from "../utils/asyncStorage";
 
 const { width, height } = Dimensions.get("screen");
 
-const OtherTabHeader = ({navigateTo,auth}) => {
+const OtherTabHeader = ({ navigateTo, auth }) => {
   const theme = useTheme();
   const navigation = useNavigation();
+  const dispatch = useDispatch();
+
+  const handleLogout = async () => {
+    dispatch(clearUser());
+    await asyncStorage.clearData("token");
+    navigation.navigate("combineNavigation");
+  };
 
   return (
     <View style={styles.mainContainer}>
       <Image source={Images.mainHeader} style={styles.image} />
       <View style={{ ...styles.container, padding: theme.spacing.l }}>
-        <TouchableOpacity style={styles.icons} onPress={()=>navigation.navigate(navigateTo)} activeOpacity={0.9}>
+        <TouchableOpacity
+          style={styles.icons}
+          onPress={() => navigation.navigate(navigateTo)}
+          activeOpacity={0.9}
+        >
           <ArrowBack />
         </TouchableOpacity>
 
-        <TouchableOpacity style={styles.notifyicon} onPress={()=>navigation.navigate(auth)} activeOpacity={0.9}>
+        <TouchableOpacity
+          style={styles.notifyicon}
+          onPress={handleLogout}
+          activeOpacity={0.9}
+        >
           <LogoutIcon />
         </TouchableOpacity>
       </View>

@@ -13,6 +13,7 @@ import DatePickers from "./components/DataPickers";
 import TabHeaders from "./components/TabHeaders";
 import Request from "./components/Request";
 import NotFoundSvg from "../../assets/svg/notFound.svg";
+import ApiServices from "../../services/ApiServices";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -23,22 +24,43 @@ const ReceiveScreen = () => {
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [status, setStatus] = useState("all");
+  const [isLoading, setIsLoading] = useState("");
 
+  let params = {};
+  if (status === "all") {
+    params = {};
+  } else {
+    params = {
+      status,
+    };
+  }
+  if (startDate && startDate !== "") {
+    params.startDate = startDate;
+  }
+
+  if (endDate && endDate !== "") {
+    params.endDate = endDate;
+  }
   useEffect(() => {
-    const data = require("../../utils/request.json");
-    if (status === "all") {
-      setData(data);
-    } else if (status === "approved") {
-      let tempData = data.filter((data) => data.status === status);
-      setData(tempData);
-    } else if (status === "rejected") {
-      let tempData = data.filter((data) => data.status === status);
-      setData(tempData);
-    } else {
-      let tempData = data.filter((data) => data.status === status);
-      setData(tempData);
-    }
-  }, [status]);
+    const fetch = async () => {
+      setIsLoading(true);
+      try {
+        const {
+          data: {
+            data: { content },
+          },
+          status: statusCode,
+        } = await ApiServices.getRequest(params);
+        if (statusCode === 200) {
+          setData(content);
+          setIsLoading(false);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetch();
+  }, [status, startDate, endDate]);
 
   return (
     <View
@@ -86,7 +108,15 @@ const ReceiveScreen = () => {
             {data.length == 0 && (
               <View style={styles.notFound}>
                 <NotFoundSvg width={height * 0.06} height={height * 0.06} />
-                <Texts variant="p" style={{...styles.notFoundTxt,paddingVertical: theme.spacing.m}}>No Requests</Texts>
+                <Texts
+                  variant="p"
+                  style={{
+                    ...styles.notFoundTxt,
+                    paddingVertical: theme.spacing.m,
+                  }}
+                >
+                  No Requests
+                </Texts>
               </View>
             )}
           </View>
@@ -122,15 +152,15 @@ const styles = StyleSheet.create({
   requesContainer: {
     marginTop: 24,
   },
-  notFound:{
+  notFound: {
     alignItems: "center",
     justifyContent: "center",
-   flex: 1,
-   height: height*0.25,
+    flex: 1,
+    height: height * 0.25,
   },
-  notFoundTxt:{
-    fontSize: height*0.02,
-    textAlign:"center",
-    color:"#A2AAB1"
-  }
+  notFoundTxt: {
+    fontSize: height * 0.02,
+    textAlign: "center",
+    color: "#A2AAB1",
+  },
 });

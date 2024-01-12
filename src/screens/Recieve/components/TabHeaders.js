@@ -1,4 +1,4 @@
-import { StyleSheet, View,TouchableOpacity } from "react-native";
+import { StyleSheet, View, TouchableOpacity } from "react-native";
 import React from "react";
 import Texts from "../../../components/Texts";
 
@@ -8,10 +8,10 @@ const TabHeaders = ({ setStatus, status }) => {
     <View style={styles.navContainer}>
       {filterBy.map((data, index) => (
         <TouchableOpacity
-        activeOpacity={0.9}
+          activeOpacity={0.9}
           key={index}
           style={status === data ? styles.navItem_active : styles.navItem}
-          onPress={()=> setStatus(data)}
+          onPress={() => setStatus(data)}
         >
           <Texts
             variant="p"

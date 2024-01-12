@@ -2,11 +2,11 @@ import { StyleSheet, Text, View, Dimensions } from "react-native";
 import React from "react";
 import Texts from "../Texts";
 import ChatSvg from "../../assets/svg/chat.svg";
-const {height,width} = Dimensions.get("screen")
+const { height, width } = Dimensions.get("screen");
 
 const Notifications = (props) => {
   return (
-    <View style={{...styles.activity, ...props.style}}>
+    <View style={{ ...styles.activity, ...props.style }}>
       <View style={styles.activity_img}>
         <ChatSvg width="20" height="20" />
       </View>
@@ -16,13 +16,12 @@ const Notifications = (props) => {
           style={{
             textTransform: "capitalize",
             color: "#84919A",
-            
           }}
         >
           {props.title}
         </Texts>
-        <Texts variant="p" style={{...styles.message}}>
-          {props.message}
+        <Texts variant="p" style={{ ...styles.message }}>
+          {props.body}
         </Texts>
       </View>
     </View>
@@ -37,7 +36,7 @@ const styles = StyleSheet.create({
     alignItems: "flex-end",
     gap: height * 0.019,
   },
-  message:{
+  message: {
     maxWidth: 300,
-  }
+  },
 });

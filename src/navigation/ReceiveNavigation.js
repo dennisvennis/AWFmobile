@@ -1,4 +1,4 @@
-import { StyleSheet , Platform} from "react-native";
+import { StyleSheet, Platform } from "react-native";
 import React from "react";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
 import { CardStyleInterpolators } from "@react-navigation/stack";
@@ -14,28 +14,30 @@ import AuthNavigation from "./AuthNavigation";
 const Stack = createNativeStackNavigator();
 
 const ReceivedNavigation = () => {
-  const theme = useTheme()
+  const theme = useTheme();
   return (
-    <Stack.Navigator screenOptions={{
-      headerTransparent: true,
-      contentStyle: { backgroundColor: theme.colors.mainBackground}
-    }}>
+    <Stack.Navigator
+      screenOptions={{
+        headerTransparent: true,
+        contentStyle: { backgroundColor: theme.colors.mainBackground },
+      }}
+    >
       <Stack.Screen
         name="receive"
         component={ReceiveScreen}
         options={{
           header: () => (
-            <OtherTabHeader
-              navigateTo="dashboard"
-              auth="auth"
-            />
+            <OtherTabHeader navigateTo="dashboard" auth="combineNavigation" />
           ),
           gestureDirection: "vertical",
           transitionSpec: {
             open: transition.config,
             close: transition.closeConfig,
           },
-          cardStyleInterpolator: Platform.OS === 'ios'? CardStyleInterpolators.forModalPresentationIOS: CardStyleInterpolators.forBottomSheetAndroid
+          cardStyleInterpolator:
+            Platform.OS === "ios"
+              ? CardStyleInterpolators.forModalPresentationIOS
+              : CardStyleInterpolators.forBottomSheetAndroid,
         }}
       />
       <Stack.Screen
@@ -43,17 +45,17 @@ const ReceivedNavigation = () => {
         component={SingleReceiveScreen}
         options={{
           header: () => (
-            <OtherTabHeader
-              navigateTo="receive"
-              auth="auth"
-            />
+            <OtherTabHeader navigateTo="receive" auth="combineNavigation" />
           ),
           gestureDirection: "vertical",
           transitionSpec: {
             open: transition.config,
             close: transition.closeConfig,
           },
-          cardStyleInterpolator: Platform.OS === 'ios'? CardStyleInterpolators.forModalPresentationIOS: CardStyleInterpolators.forBottomSheetAndroid
+          cardStyleInterpolator:
+            Platform.OS === "ios"
+              ? CardStyleInterpolators.forModalPresentationIOS
+              : CardStyleInterpolators.forBottomSheetAndroid,
         }}
       />
     </Stack.Navigator>

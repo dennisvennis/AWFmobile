@@ -5,6 +5,7 @@ import Notifications from "../../components/UI/Notifications";
 import Texts from "../../components/Texts";
 import ApiServices from "../../services/ApiServices";
 import NotFoundSvg from "../../assets/svg/notFound.svg";
+import SkeletonLoader from "../../components/SkeletonLoader";
 const { width, height } = Dimensions.get("screen");
 
 const NotificationsScreen = () => {
@@ -17,7 +18,9 @@ const NotificationsScreen = () => {
       setIsLoading(true);
       try {
         const {
-          data: { content },
+          data: {
+            data: { content },
+          },
           status,
         } = await ApiServices.getAllNotifications(5, 0, false);
         if (status === 200) {

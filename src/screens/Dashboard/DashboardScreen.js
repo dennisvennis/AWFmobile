@@ -21,7 +21,6 @@ const { height } = Dimensions.get("screen");
 
 const DashboardScreen = () => {
   const theme = useTheme();
-  const [recentActivities, setRecentActivities] = useState([]);
   const [isLoading, setIsLoading] = useState(true);
   const [notification, setNotification] = useState([]);
 
@@ -32,7 +31,9 @@ const DashboardScreen = () => {
       setIsLoading(true);
       try {
         const {
-          data: { content },
+          data: {
+            data: { content },
+          },
           status,
         } = await ApiServices.getAllNotifications(5, 0, false);
         if (status === 200) {
