@@ -57,7 +57,7 @@ const App = () => {
   let inactivityTimeout = null;
 
   const startInactivityTimeout = () => {
-    inactivityTimeout = setTimeout(handleInactivityTimeout, 60 * 1000 * 15);
+    inactivityTimeout = setTimeout(handleInactivityTimeout, 60 * 1000 * 30);
   };
 
   const clearInactivityTimeout = () => {

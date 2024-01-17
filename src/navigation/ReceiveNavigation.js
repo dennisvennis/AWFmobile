@@ -6,10 +6,7 @@ import transition from "../utils/transition";
 import ReceiveScreen from "../screens/Recieve/ReceiveScreen";
 import SingleReceiveScreen from "../screens/Recieve/SingleReceiveScreen";
 import OtherTabHeader from "../components/OtherTabHeader";
-import Notifications from "../screens/Notification";
-import NotificationHeader from "../components/NotificationHeader";
 import { useTheme } from "@shopify/restyle";
-import AuthNavigation from "./AuthNavigation";
 
 const Stack = createNativeStackNavigator();
 

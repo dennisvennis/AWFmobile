@@ -24,7 +24,7 @@ const ApiServices = {
 
   //////// EXPENSE TYPE SERVICES //////////
   getAllExpenseTypes() {
-    return Api().get("/expenseTypes");
+    return Api().get("/expense/types");
   },
   getAllDocumentTypes() {
     return Api().get("/documentTypes");
@@ -36,8 +36,8 @@ const ApiServices = {
   },
 
   //////// COMMENT SERVICES //////////
-  addCommentToRequest(workflowId, formData) {
-    return Api().put(`/comment/${workflowId}`, formData);
+  addCommentToRequest(workflowId, payload) {
+    return Api().put(`/comment/${workflowId}`, payload);
   },
   veiwComments(workflowIds) {
     let params = {

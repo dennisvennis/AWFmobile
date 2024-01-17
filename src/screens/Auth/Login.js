@@ -63,7 +63,6 @@ const Login = () => {
                 data: { accessToken },
               },
             } = await axios.post(`${config.API_BASE_URL}/auth/login`, params);
-            console.log(status);
             if (status === "success") {
               setLoading(false);
               const base64Decoded = base64Decode(accessToken.split(".")[1]);

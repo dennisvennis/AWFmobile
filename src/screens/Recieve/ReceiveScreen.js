@@ -29,6 +29,10 @@ const ReceiveScreen = () => {
   let params = {};
   if (status === "all") {
     params = {};
+  } else if (status === "payment in progress") {
+    params = {
+      status: "payment_in_ progress",
+    };
   } else {
     params = {
       status,
@@ -103,7 +107,7 @@ const ReceiveScreen = () => {
           <View style={styles.requesContainer}>
             {data.length > 0 &&
               data.map((data) => {
-                return <Request key={data.id} {...data} />;
+                return <Request key={data.id} data={data} />;
               })}
             {data.length == 0 && (
               <View style={styles.notFound}>

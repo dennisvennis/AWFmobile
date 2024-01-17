@@ -24,6 +24,9 @@ const PieChart = ({ size = 150, strokeWidth = 40 }) => {
   const [pendingRequest, setPendingRequest] = useState([]);
   const [approvedRequest, setApprovedRequest] = useState([]);
   const [rejectedRequest, setRejectedRequest] = useState([]);
+  const [returnedRequest, setReturnedRequest] = useState([]);
+  const [paidRequest, setPaidRequest] = useState([]);
+  const [declinedRequest, setDeclinedRequest] = useState([]);
   const [fetchedData, setFetchedData] = useState([
     { name: "", percentage: 0, color: "" },
   ]);
@@ -44,14 +47,25 @@ const PieChart = ({ size = 150, strokeWidth = 40 }) => {
         if (status === 200) {
           setRequest(content);
           content.forEach((data) => {
-            if (data.status === "pending") {
-              setPendingRequest(content);
-            }
-            if (data.status === "rejected") {
-              setRejectedRequest(content);
-            }
-            if (data.status === "approved") {
-              setApprovedRequest(content);
+            switch (data.status) {
+              case "pending":
+                setPendingRequest(data);
+                break;
+              case "rejected":
+                setRejectedRequest(data);
+                break;
+              case "approved":
+                setApprovedRequest(data);
+                break;
+              case "returned":
+                setReturnedRequest(data);
+                break;
+              case "paid":
+                setPaidRequest(data);
+                break;
+              case "declined":
+                setDeclinedRequest(data);
+                break;
             }
           });
           setIsLoading(false);
@@ -79,10 +93,41 @@ const PieChart = ({ size = 150, strokeWidth = 40 }) => {
       color: "#F2C523",
       percentage: pendingRequest.length / request.length,
     };
+    let returnedObj = {
+      name: "Returned",
+      color: "#3258BA",
+      percentage: returnedRequest.length / request.length,
+    };
+    let paidObj = {
+      name: "Paid",
+      color: "#1487AB",
+      percentage: paidRequest.length / request.length,
+    };
+    let declinedObj = {
+      name: "Declined",
+      color: "#E86F3B",
+      percentage: declinedRequest.length / request.length,
+    };
+
     setFetchedData((prev) => {
-      return [...prev, approvedObj, rejectedObj, pendingObj];
+      return [
+        ...prev,
+        approvedObj,
+        rejectedObj,
+        pendingObj,
+        returnedObj,
+        declinedObj,
+        paidObj,
+      ];
     });
-  }, [approvedRequest, pendingRequest, rejectedRequest]);
+  }, [
+    approvedRequest,
+    pendingRequest,
+    rejectedRequest,
+    returnedRequest,
+    paidRequest,
+    declinedRequest,
+  ]);
 
   const refresh = () => {
     let angle = 0;
