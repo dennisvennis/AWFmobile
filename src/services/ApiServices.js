@@ -35,6 +35,11 @@ const ApiServices = {
     return Api().get("/currencies");
   },
 
+  //////// CURRENCY SERVICES //////////
+  getAlldepartments() {
+    return Api().get("/departments");
+  },
+
   //////// COMMENT SERVICES //////////
   addCommentToRequest(workflowId, payload) {
     return Api().put(`/comment/${workflowId}`, payload);

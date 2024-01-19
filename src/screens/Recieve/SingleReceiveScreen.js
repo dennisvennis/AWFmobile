@@ -15,6 +15,7 @@ import { dateFormatter } from "../../utils/dateFormatter";
 import Timeline from "./components/Timeline";
 import Comment from "./components/Comment";
 import ExpenseDetails from "./components/ExpenseDetails";
+import RequestManager from "./components/RequestManager";
 
 const { width, height } = Dimensions.get("screen");
 
@@ -121,6 +122,7 @@ const SingleReceiveScreen = ({ route }) => {
             </Texts>
           </View>
         </View>
+        <RequestManager data={data} />
         <ExpenseDetails data={data} />
         <Timeline dataId={data.id} update={update} />
         <Comment data={data} setUpdate={setUpdate} />
@@ -195,7 +197,7 @@ const styles = StyleSheet.create({
     paddingHorizontal: 16,
     borderRadius: 8,
     alignItems: "center",
-    width: width * 0.3,
+    width: width * 0.25,
     marginVertical: height * 0.03,
   },
   topSectionrghtTxt: {

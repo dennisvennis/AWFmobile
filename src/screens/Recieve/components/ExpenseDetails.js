@@ -10,9 +10,11 @@ const ExpenseDetails = ({ data }) => {
   const { expenseInfo } = data;
   const theme = useTheme();
   const [expensesType, setExpensesType] = useState("");
+  const [currency, setCurrency] = useState("");
+  const [departments, setDepartments] = useState("");
 
   useEffect(() => {
-    const fetchData = async () => {
+    const fetchExpenseTypeData = async () => {
       try {
         const {
           data: {
@@ -21,20 +23,66 @@ const ExpenseDetails = ({ data }) => {
           status: statusCode,
         } = await ApiServices.getAllExpenseTypes();
         if (statusCode === 200) {
-          let newArray;
+          let expensesTypeName;
           content.forEach((data) => {
             if (data.id === expenseInfo.expenseType) {
-              newArray = data.name;
+              expensesTypeName = data.name;
             }
           });
-          setExpensesType(newArray);
+          setExpensesType(expensesTypeName);
         }
       } catch (error) {
         console.log(error.message);
       }
     };
 
-    fetchData();
+    const fetchCurrenciesData = async () => {
+      try {
+        const {
+          data: {
+            data: { content },
+          },
+          status: statusCode,
+        } = await ApiServices.getAllCurrencies();
+        if (statusCode === 200) {
+          let currency;
+          content.forEach((data) => {
+            if (data.id === expenseInfo.currency) {
+              currency = data.name;
+            }
+          });
+          setCurrency(currency);
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+
+    const fetchDepartmentsData = async () => {
+      try {
+        const {
+          data: {
+            data: { content },
+          },
+          status: statusCode,
+        } = await ApiServices.getAlldepartments();
+        if (statusCode === 200) {
+          let department;
+          content.forEach((item) => {
+            if (item.id === data.department) {
+              department = item.department;
+            }
+          });
+          setDepartments(department);
+        }
+      } catch (error) {
+        console.log(error.message);
+      }
+    };
+
+    fetchExpenseTypeData();
+    fetchCurrenciesData();
+    fetchDepartmentsData();
   }, []);
 
   return (
@@ -50,6 +98,7 @@ const ExpenseDetails = ({ data }) => {
       >
         Expense Details
       </Texts>
+
       <View style={styles.container}>
         <Texts
           variant="p"
@@ -91,6 +140,90 @@ const ExpenseDetails = ({ data }) => {
           </View>
         </View>
       </View>
+      <View style={{ ...styles.container, marginTop: theme.spacing.l }}>
+        <Texts variant="p" style={{ ...styles.bnkDet }}>
+          {departments}
+        </Texts>
+        <View style={styles.deptMainCont}>
+          <View style={styles.deptListCont}>
+            <View style={styles.deptEch}>
+              <Texts
+                variant="p"
+                style={{ ...styles.bnkEchHed, color: theme.colors.greenText }}
+              >
+                Currency
+              </Texts>
+              <Texts
+                variant="p"
+                style={{ ...styles.bnkEchTxt, textTransform: "uppercase" }}
+              >
+                {currency}
+              </Texts>
+            </View>
+            <View style={styles.deptEch}>
+              <Texts
+                variant="p"
+                style={{ ...styles.bnkEchHed, color: theme.colors.greenText }}
+              >
+                VAT Rate
+              </Texts>
+              <Texts variant="p" style={{ ...styles.bnkEchTxt }}>
+                {expenseInfo.vat === null ? "-" : expenseInfo.vat}
+              </Texts>
+            </View>
+            <View style={styles.deptEch}>
+              <Texts
+                variant="p"
+                style={{ ...styles.bnkEchHed, color: theme.colors.greenText }}
+              >
+                WHT Rate
+              </Texts>
+              <Texts variant="p" style={{ ...styles.bnkEchTxt }}>
+                {expenseInfo.wht === null ? "-" : expenseInfo.wht}
+              </Texts>
+            </View>
+          </View>
+          <View style={styles.deptListCont}>
+            <View style={styles.deptEch}>
+              <Texts
+                variant="p"
+                style={{ ...styles.bnkEchHed, color: theme.colors.greenText }}
+              >
+                Sub-total
+              </Texts>
+              <Texts variant="p" style={{ ...styles.bnkEchTxt }}>
+                {expenseInfo.subTotal === null
+                  ? "-"
+                  : expenseInfo.subTotal.toLocaleString()}
+              </Texts>
+            </View>
+            <View style={styles.deptEch}>
+              <Texts
+                variant="p"
+                style={{ ...styles.bnkEchHed, color: theme.colors.greenText }}
+              >
+                Tax
+              </Texts>
+              <Texts variant="p" style={{ ...styles.bnkEchTxt }}>
+                0.92
+              </Texts>
+            </View>
+            <View style={styles.deptEch}>
+              <Texts
+                variant="p"
+                style={{ ...styles.bnkEchHed, color: theme.colors.greenText }}
+              >
+                Total
+              </Texts>
+              <Texts variant="p" style={{ ...styles.bnkEchTxt }}>
+                {expenseInfo.totalAmount === null
+                  ? "-"
+                  : expenseInfo.totalAmount.toLocaleString()}
+              </Texts>
+            </View>
+          </View>
+        </View>
+      </View>
     </View>
   );
 };
@@ -127,5 +260,15 @@ const styles = StyleSheet.create({
     fontSize: height * 0.02,
     color: "#666",
     fontWeight: 700,
+  },
+  deptMainCont: {
+    gap: 15,
+  },
+  deptListCont: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+  },
+  deptEch: {
+    alignItems: "center",
   },
 });
