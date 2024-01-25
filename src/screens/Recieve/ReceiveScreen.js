@@ -14,17 +14,21 @@ import TabHeaders from "./components/TabHeaders";
 import Request from "./components/Request";
 import NotFoundSvg from "../../assets/svg/notFound.svg";
 import ApiServices from "../../services/ApiServices";
+import { useDispatch, useSelector } from "react-redux";
+import { getRequests } from "../../store/slices/requestSlice";
 
 const { width, height } = Dimensions.get("screen");
 
 const ReceiveScreen = () => {
   const theme = useTheme();
+  const dispatch = useDispatch();
+  const { requests } = useSelector((state) => state.requests);
+
   const [data, setData] = useState([]);
   const [isModalOpen, setIsModalOpen] = useState(false);
   const [startDate, setStartDate] = useState("");
   const [endDate, setEndDate] = useState("");
   const [status, setStatus] = useState("all");
-  const [isLoading, setIsLoading] = useState("");
 
   let params = {};
   if (status === "all") {
@@ -45,26 +49,42 @@ const ReceiveScreen = () => {
   if (endDate && endDate !== "") {
     params.endDate = endDate;
   }
+  params.type = "received";
+
+  // useEffect(() => {
+  //   const fetch = async () => {
+  //     setIsLoading(true);
+  //     setRefresh(false);
+  //     try {
+  //       const {
+  //         data: {
+  //           data: { content },
+  //         },
+  //         status: statusCode,
+  //       } = await ApiServices.getRequest(params);
+  //       if (statusCode === 200) {
+  //         setData(content);
+  //         setIsLoading(false);
+  //         setRefresh(true);
+  //       }
+  //     } catch (error) {
+  //       console.log(error);
+  //     }
+  //   };
+  //   fetch();
+  // }, [status, startDate, endDate, refresh]);
+
+  // useEffect(() => {
+  // }, [status]);
+
   useEffect(() => {
-    const fetch = async () => {
-      setIsLoading(true);
-      try {
-        const {
-          data: {
-            data: { content },
-          },
-          status: statusCode,
-        } = await ApiServices.getRequest(params);
-        if (statusCode === 200) {
-          setData(content);
-          setIsLoading(false);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetch();
+    dispatch(getRequests(params));
   }, [status, startDate, endDate]);
+
+  useEffect(() => {
+    setData(requests);
+    console.log(data.length);
+  }, [requests, dispatch]);
 
   return (
     <View

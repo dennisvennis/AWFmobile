@@ -61,34 +61,19 @@ const TimelineItem = ({ item, isLast }) => {
   );
 };
 
-const Timeline = ({ dataId, update }) => {
+const Timeline = ({ update, comments }) => {
   const [data, setData] = useState([]);
   useEffect(() => {
-    const fetch = async () => {
-      try {
-        const {
-          data: { data },
-          status: statusCode,
-        } = await ApiServices.veiwComments(dataId);
-        if (statusCode === 200) {
-          let newData = data.map((item) => {
-            return {
-              id: item.id,
-              title: `${item.commenter.firstName} ${item.commenter.lastName}`,
-              description: item.comment,
-              timestamp: `Made this comment ${formatElapsedTime(
-                item.createdAt
-              )}`,
-            };
-          });
-          setData(newData);
-        }
-      } catch (error) {
-        console.log(error);
-      }
-    };
-    fetch();
-  }, [update]);
+    let newData = comments.map((item) => {
+      return {
+        id: item.id,
+        title: `${item.commenter.firstName} ${item.commenter.lastName}`,
+        description: item.comment,
+        timestamp: `Made this comment ${formatElapsedTime(item.createdAt)}`,
+      };
+    });
+    setData(newData);
+  }, [update, comments]);
 
   const renderItem = ({ item, index }) => (
     <TimelineItem item={item} isLast={index === data.length - 1} />
@@ -107,11 +92,17 @@ const Timeline = ({ dataId, update }) => {
       >
         Activity Feed
       </Texts>
-      <FlatList
-        data={data}
-        renderItem={renderItem}
-        keyExtractor={(item) => item.id}
-      />
+      {data.length < 1 ? (
+        <View>
+          <Texts variant="p">No activites</Texts>
+        </View>
+      ) : (
+        <FlatList
+          data={data}
+          renderItem={renderItem}
+          keyExtractor={(item) => item.id}
+        />
+      )}
     </View>
   );
 };

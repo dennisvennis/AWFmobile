@@ -1,6 +1,6 @@
 import { useEffect, useState, useRef } from "react";
 import { StatusBar } from "expo-status-bar";
-import { StyleSheet, AppState, View, SafeAreaView } from "react-native";
+import { StyleSheet, AppState, View, SafeAreaView, LogBox } from "react-native";
 import * as Font from "expo-font";
 import { ThemeProvider, createText } from "@shopify/restyle";
 import theme from "./src/utils/theme";
@@ -55,6 +55,15 @@ const App = () => {
   const navigation = useNavigation();
   const dispatch = useDispatch();
   let inactivityTimeout = null;
+
+  useEffect(() => {
+    LogBox.ignoreLogs([
+      "VirtualizedLists should never be nested inside plain ScrollViews with the same orientation because it can break windowing and other functionality - use another VirtualizedList-backed container instead.",
+    ]);
+    LogBox.ignoreLogs([
+      "SerializableStateInvariantMiddleware took 662ms, which is more than the warning threshold of 32ms",
+    ]);
+  }, []);
 
   const startInactivityTimeout = () => {
     inactivityTimeout = setTimeout(handleInactivityTimeout, 60 * 1000 * 30);

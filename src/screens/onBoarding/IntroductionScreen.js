@@ -34,8 +34,13 @@ const IntroductionScreen = () => {
   const viewConfig = useRef({ viewAreaCoveragePercentThreshold: 50 }).current;
 
   useEffect(() => {
-    setTimeout(() => {
+    setTimeout(async () => {
       if (currentIndex === slides.length - 1) {
+        try {
+          await asyncStorage.storeData("viewedOnboarding", "true");
+        } catch (error) {
+          console.log(error);
+        }
         return;
       } else {
         slidesRef.current.scrollToIndex({ index: currentIndex + 1 });

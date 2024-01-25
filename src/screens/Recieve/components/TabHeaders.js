@@ -17,7 +17,6 @@ const TabHeaders = ({ setStatus, status }) => {
     "returned",
     "rejected",
     "paid",
-    "declined",
     "payment in progress",
   ];
   return (

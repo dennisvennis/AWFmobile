@@ -16,6 +16,7 @@ import Notifications from "../../components/UI/Notifications";
 import { useSelector } from "react-redux";
 import SkeletonLoader from "../../components/SkeletonLoader";
 import ApiServices from "../../services/ApiServices";
+import { getGreeting } from "../../utils/greeting";
 
 const { height } = Dimensions.get("screen");
 
@@ -66,7 +67,7 @@ const DashboardScreen = () => {
           }}
         >
           <Texts variant="p" style={{ fontSize: theme.spacing.m }}>
-            Good morning,
+            {getGreeting()},
           </Texts>
           <Texts variant="h1" style={{ fontSize: theme.spacing.l }}>
             {user?.firstName}

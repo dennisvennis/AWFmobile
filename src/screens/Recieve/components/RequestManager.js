@@ -4,24 +4,127 @@ import {
   View,
   Dimensions,
   TouchableOpacity,
+  TextInput,
 } from "react-native";
 import { useState, useEffect } from "react";
 import { ProgressBar, Colors } from "react-native-paper";
+import { useSelector } from "react-redux";
 import { useTheme } from "@shopify/restyle";
 import Texts from "../../../components/Texts";
 import RejectLightSvg from "../../../assets/svg/rejectLight.svg";
 import ReturnDarkSvg from "../../../assets/svg/returnDark.svg";
 import DeclineLightSvg from "../../../assets/svg/declineLight.svg";
 import ApproveLightSvg from "../../../assets/svg/approveLight.svg";
+import ApiServices from "../../../services/ApiServices";
+import Button from "../../../components/Button";
+import Toast from "react-native-toast-message";
 
 const { width, height } = Dimensions.get("screen");
 
-const RequestManager = ({ data }) => {
+const RequestManager = ({ data, setUpdate }) => {
   const theme = useTheme();
+  const { user } = useSelector((state) => state.auth);
   const { expenseInfo } = data;
+  const dataId = data.id;
   const [approvedCount, setApprovedCount] = useState(0);
   const [approvedAvg, setApprovedAvg] = useState(0);
   const [reviewersLength, setreviewersLength] = useState(0);
+  const [noReviewer, setNoReviewer] = useState(false);
+  const [loading, setLoading] = useState(false);
+  const [statusHandler, setStatusHandler] = useState("");
+  const [reason, setReason] = useState("");
+  const [requestHandlers, setRequestHandlers] = useState(true);
+  const [hideBtn, setHideBtn] = useState(false);
+
+  const handleReasonChange = (text) => {
+    setReason(text);
+  };
+
+  const handleRequestReaction = async () => {
+    let formData;
+    if (statusHandler === "rejected") {
+      if (reason === "") {
+        Toast.show({
+          type: "error",
+          text1: "Comment reason for rejecting request",
+        });
+        setLoading(false);
+        return;
+      } else {
+        formData = {
+          comment: reason,
+          status: statusHandler,
+        };
+      }
+    }
+    if (statusHandler === "returned") {
+      if (reason === "") {
+        Toast.show({
+          type: "error",
+          text1: "Comment reason for returned request",
+        });
+        setLoading(false);
+        return;
+      } else {
+        formData = {
+          comment: reason,
+          status: statusHandler,
+        };
+      }
+    }
+    if (statusHandler === "declined") {
+      if (reason === "") {
+        Toast.show({
+          type: "error",
+          text1: "Comment reason for declined request",
+        });
+        setLoading(false);
+        return;
+      } else {
+        formData = {
+          comment: reason,
+          status: statusHandler,
+        };
+      }
+    }
+    if (statusHandler === "approved") {
+      if (reason === "") {
+        Toast.show({
+          type: "error",
+          text1: "Drop a comment bore approving Approving request",
+        });
+        setLoading(false);
+        return;
+      } else {
+        formData = {
+          comment: reason,
+          status: statusHandler,
+        };
+      }
+    }
+
+    try {
+      setUpdate(false);
+      const {
+        data: { message },
+        status: statusCode,
+      } = await ApiServices.reactToRequest(dataId, formData);
+      if (statusCode === 200) {
+        Toast.show({
+          type: "success",
+          text2: message,
+        });
+        setUpdate(true);
+        setLoading(false);
+        setStatusHandler("");
+        setRequestHandlers(false);
+      }
+    } catch (error) {
+      console.log(error);
+      setRequestHandlers(true);
+      setUpdate(false);
+    }
+  };
 
   useEffect(() => {
     const { reviewers } = data;
@@ -29,91 +132,162 @@ const RequestManager = ({ data }) => {
     let count = 0;
 
     reviewers.forEach((item) => {
-      if (item.status === "approved") {
+      if (item.firstReactionTime !== null) {
         count++;
       }
     });
     let approvedPercent = count / reviewers.length;
     setApprovedCount(count);
     setApprovedAvg(approvedPercent);
+
+    let macthingReviewer = data.reviewers.find(
+      (reviewer) => reviewer.actorType === "reviewer"
+    );
+    if (!macthingReviewer) {
+      setNoReviewer(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    const { reviewers } = data;
+    let matchedUser = reviewers.find((data) => data.actor === user.userId);
+    if (matchedUser) {
+      if (matchedUser.firstReactionTime !== null) {
+        setHideBtn(true);
+      }
+    }
   }, []);
 
   return (
     <View style={styles.container}>
-      <View style={styles.btnContainer}>
-        <View style={styles.btnTopCont}>
-          <TouchableOpacity activeOpacity={0.7}>
-            <View
-              style={{
-                ...styles.btnHolder,
-                borderColor: "#ED3232",
-                backgroundColor: "#ED3232",
-              }}
+      {!hideBtn && (
+        <View style={styles.btnContainer}>
+          <View style={styles.btnTopCont}>
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={() => setStatusHandler("rejected")}
             >
-              <RejectLightSvg />
-              <Texts
-                variant="p"
-                style={{ ...styles.btnHolderTxt, color: "#fff" }}
+              <View
+                style={{
+                  ...styles.btnHolder,
+                  borderColor: "#ED3232",
+                  backgroundColor: "#ED3232",
+                }}
               >
-                Reject
-              </Texts>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.7}>
-            <View
-              style={{
-                ...styles.btnHolder,
-                borderColor: "#219653",
-                backgroundColor: "#fff",
-              }}
+                <RejectLightSvg />
+                <Texts
+                  variant="p"
+                  style={{ ...styles.btnHolderTxt, color: "#fff" }}
+                >
+                  Reject
+                </Texts>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={() => setStatusHandler("returned")}
             >
-              <ReturnDarkSvg />
-              <Texts
-                variant="p"
-                style={{ ...styles.btnHolderTxt, color: "#219653" }}
+              <View
+                style={{
+                  ...styles.btnHolder,
+                  borderColor: "#219653",
+                  backgroundColor: "#fff",
+                }}
               >
-                Return
-              </Texts>
-            </View>
-          </TouchableOpacity>
-          <TouchableOpacity activeOpacity={0.7}>
-            <View
-              style={{
-                ...styles.btnHolder,
-                borderColor: "#59615C",
-                backgroundColor: "#59615C",
-              }}
+                <ReturnDarkSvg />
+                <Texts
+                  variant="p"
+                  style={{ ...styles.btnHolderTxt, color: "#219653" }}
+                >
+                  Return
+                </Texts>
+              </View>
+            </TouchableOpacity>
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={() => setStatusHandler("declined")}
             >
-              <DeclineLightSvg />
-              <Texts
-                variant="p"
-                style={{ ...styles.btnHolderTxt, color: "#fff" }}
+              <View
+                style={{
+                  ...styles.btnHolder,
+                  borderColor: "#59615C",
+                  backgroundColor: "#59615C",
+                }}
               >
-                Decline
-              </Texts>
+                <DeclineLightSvg />
+                <Texts
+                  variant="p"
+                  style={{ ...styles.btnHolderTxt, color: "#fff" }}
+                >
+                  Decline
+                </Texts>
+              </View>
+            </TouchableOpacity>
+          </View>
+          <View style={styles.btnBtmCont}>
+            <TouchableOpacity
+              activeOpacity={0.7}
+              onPress={() => setStatusHandler("approved")}
+            >
+              <View
+                style={{
+                  ...styles.btnHolder,
+                  borderColor: "#219653",
+                  backgroundColor: "#219653",
+                }}
+              >
+                <ApproveLightSvg />
+                <Texts
+                  variant="p"
+                  style={{ ...styles.btnHolderTxt, color: "#fff" }}
+                >
+                  Approve
+                </Texts>
+              </View>
+            </TouchableOpacity>
+          </View>
+          {statusHandler && (
+            <View style={styles.reasonCont}>
+              <TextInput
+                placeholder={`Enter a reason for ${
+                  statusHandler === "returned"
+                    ? "returning"
+                    : statusHandler === "rejected"
+                    ? "rejecting"
+                    : statusHandler === "declined"
+                    ? "declining"
+                    : "approving"
+                } request`}
+                style={styles.comment}
+                onChangeText={handleReasonChange}
+              />
+              <View style={styles.reasonBtnCont}>
+                <TouchableOpacity
+                  onPress={handleRequestReaction}
+                  activeOpacity={0.7}
+                >
+                  <View style={styles.reasonBtn}>
+                    <Texts variant="p" style={styles.reasonBtnTxt}>
+                      {loading ? "Sending..." : "Submit Request"}
+                    </Texts>
+                  </View>
+                </TouchableOpacity>
+                <TouchableOpacity
+                  onPress={() => setStatusHandler("")}
+                  activeOpacity={0.7}
+                >
+                  <View style={styles.reasonBtnCancel}>
+                    <Texts variant="p" style={styles.reasonBtnTxt}>
+                      Cancel
+                    </Texts>
+                  </View>
+                </TouchableOpacity>
+              </View>
             </View>
-          </TouchableOpacity>
+          )}
         </View>
-        <View style={styles.btnBtmCont}>
-          <TouchableOpacity activeOpacity={0.7}>
-            <View
-              style={{
-                ...styles.btnHolder,
-                borderColor: "#219653",
-                backgroundColor: "#219653",
-              }}
-            >
-              <ApproveLightSvg />
-              <Texts
-                variant="p"
-                style={{ ...styles.btnHolderTxt, color: "#fff" }}
-              >
-                Approve
-              </Texts>
-            </View>
-          </TouchableOpacity>
-        </View>
-      </View>
+      )}
+
       <View style={styles.reqAbt}>
         <Texts variant="p" style={styles.reqAbtTxt}>
           {expenseInfo.expenseNaration !== null
@@ -124,31 +298,8 @@ const RequestManager = ({ data }) => {
       <View style={styles.reviewCont}>
         <Texts style={styles.reviewContHed}>Reviewers</Texts>
         <View style={styles.reviewRev}>
-          {data.reviewers.map((reviewer) => {
-            let { reviewerInfo } = reviewer;
-            if (reviewer.actorType === "review") {
-              return (
-                <View
-                  key={reviewerInfo.id}
-                  style={
-                    reviewer.status === "approved"
-                      ? styles.reviewRevEchActive
-                      : styles.reviewRevEch
-                  }
-                >
-                  <Texts
-                    style={
-                      reviewer.status === "approved"
-                        ? styles.reviewRevEchTxtActive
-                        : styles.reviewRevEchTxt
-                    }
-                  >
-                    {reviewerInfo.firstName} {reviewerInfo.lastName}
-                  </Texts>
-                </View>
-              );
-            }
-            return (
+          {noReviewer ? (
+            <View>
               <Texts
                 variant="p"
                 style={{
@@ -159,8 +310,34 @@ const RequestManager = ({ data }) => {
               >
                 No reveiwers
               </Texts>
-            );
-          })}
+            </View>
+          ) : (
+            data.reviewers.map((reviewer) => {
+              let { reviewerInfo } = reviewer;
+              if (reviewer.actorType === "reviewer") {
+                return (
+                  <View
+                    key={reviewerInfo.id}
+                    style={
+                      reviewer.status === "approved"
+                        ? styles.reviewRevEchActive
+                        : styles.reviewRevEch
+                    }
+                  >
+                    <Texts
+                      style={
+                        reviewer.status === "approved"
+                          ? styles.reviewRevEchTxtActive
+                          : styles.reviewRevEchTxt
+                      }
+                    >
+                      {reviewerInfo.firstName} {reviewerInfo.lastName}
+                    </Texts>
+                  </View>
+                );
+              }
+            })
+          )}
         </View>
         <Texts style={{ ...styles.reviewContHed, marginTop: 10 }}>
           Approver
@@ -179,6 +356,7 @@ const RequestManager = ({ data }) => {
                   }
                 >
                   <Texts
+                    key={reviewerInfo.id}
                     style={
                       reviewer.status === "approved"
                         ? styles.reviewAppEchTxtActive
@@ -332,5 +510,40 @@ const styles = StyleSheet.create({
   progressBar: {
     height: height * 0.01,
     borderRadius: 5,
+  },
+  comment: {
+    borderWidth: 1,
+    padding: 10,
+    height: height * 0.1,
+    borderColor: "#999",
+    borderRadius: height * 0.005,
+  },
+  reasonBtn: {
+    padding: 10,
+    backgroundColor: "#111",
+    borderRadius: height * 0.005,
+    marginTop: 10,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
+  },
+  reasonBtnTxt: {
+    color: "#fff",
+    fontWeight: "700",
+    fontSize: height * 0.02,
+  },
+  reasonBtnCont: {
+    flexDirection: "row",
+    alignItems: "center",
+    gap: 10,
+  },
+  reasonBtnCancel: {
+    padding: 10,
+    backgroundColor: "#59615C",
+    borderRadius: height * 0.005,
+    marginTop: 10,
+    display: "flex",
+    alignItems: "center",
+    justifyContent: "center",
   },
 });

@@ -7,7 +7,6 @@ import ApiServices from "../services/ApiServices";
 const { height, width } = Dimensions.get("screen");
 
 const statusList = [
-  { name: "Declined", color: "#E86F3B" },
   { name: "Approved", color: "#49945A" },
   { name: "Pending", color: "#F2C523" },
   { name: "Returned", color: "#3258BA" },
@@ -26,7 +25,6 @@ const PieChart = ({ size = 150, strokeWidth = 40 }) => {
   const [rejectedRequest, setRejectedRequest] = useState([]);
   const [returnedRequest, setReturnedRequest] = useState([]);
   const [paidRequest, setPaidRequest] = useState([]);
-  const [declinedRequest, setDeclinedRequest] = useState([]);
   const [fetchedData, setFetchedData] = useState([
     { name: "", percentage: 0, color: "" },
   ]);
@@ -36,6 +34,7 @@ const PieChart = ({ size = 150, strokeWidth = 40 }) => {
 
   useEffect(() => {
     const fetch = async () => {
+      const params = { type: "received" };
       setIsLoading(true);
       try {
         const {
@@ -43,28 +42,25 @@ const PieChart = ({ size = 150, strokeWidth = 40 }) => {
             data: { content },
           },
           status,
-        } = await ApiServices.getRequest();
+        } = await ApiServices.getRequest(params);
         if (status === 200) {
           setRequest(content);
           content.forEach((data) => {
             switch (data.status) {
               case "pending":
-                setPendingRequest(data);
+                setPendingRequest((prev) => [...prev, data]);
                 break;
               case "rejected":
-                setRejectedRequest(data);
+                setRejectedRequest((prev) => [...prev, data]);
                 break;
               case "approved":
-                setApprovedRequest(data);
+                setApprovedRequest((prev) => [...prev, data]);
                 break;
               case "returned":
-                setReturnedRequest(data);
+                setReturnedRequest((prev) => [...prev, data]);
                 break;
               case "paid":
-                setPaidRequest(data);
-                break;
-              case "declined":
-                setDeclinedRequest(data);
+                setPaidRequest((prev) => [...prev, data]);
                 break;
             }
           });
@@ -83,6 +79,7 @@ const PieChart = ({ size = 150, strokeWidth = 40 }) => {
       color: "#49945A",
       percentage: approvedRequest.length / request.length,
     };
+
     let rejectedObj = {
       name: "Rejected",
       color: "#ED3232",
@@ -103,30 +100,29 @@ const PieChart = ({ size = 150, strokeWidth = 40 }) => {
       color: "#1487AB",
       percentage: paidRequest.length / request.length,
     };
-    let declinedObj = {
-      name: "Declined",
-      color: "#E86F3B",
-      percentage: declinedRequest.length / request.length,
-    };
-
-    setFetchedData((prev) => {
-      return [
-        ...prev,
+    if (
+      approvedObj.percentage !== NaN &&
+      pendingObj.percentage !== NaN &&
+      returnedObj.percentage !== NaN &&
+      paidObj.percentage !== NaN &&
+      rejectedObj.percentage !== NaN
+    ) {
+      let dataArray = [
         approvedObj,
         rejectedObj,
         pendingObj,
         returnedObj,
-        declinedObj,
         paidObj,
       ];
-    });
+      dataArray.sort((a, b) => b.percentage - a.percentage);
+      setFetchedData([...dataArray]);
+    }
   }, [
     approvedRequest,
     pendingRequest,
     rejectedRequest,
     returnedRequest,
     paidRequest,
-    declinedRequest,
   ]);
 
   const refresh = () => {
@@ -137,6 +133,7 @@ const PieChart = ({ size = 150, strokeWidth = 40 }) => {
       angle += item.percentage * 360;
     });
     setStartAngles(angles);
+    // console.log("?????????///////", fetchedData);
     setData(fetchedData);
   };
 

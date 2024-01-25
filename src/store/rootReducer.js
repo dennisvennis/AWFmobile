@@ -1,4 +1,5 @@
 import UserReducer from "./slices/usersSlice";
+import RequestsReducer from "./slices/requestSlice";
 import AsyncStorage from "@react-native-async-storage/async-storage";
 import { persistReducer } from "redux-persist";
 import { combineReducers } from "@reduxjs/toolkit";
@@ -10,6 +11,7 @@ const persisConfig = {
 };
 const rootReducer = combineReducers({
   auth: UserReducer,
+  requests: RequestsReducer,
 });
 
 const persistedReducer = persistReducer(persisConfig, rootReducer);

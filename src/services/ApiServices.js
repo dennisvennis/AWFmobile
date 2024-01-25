@@ -55,6 +55,19 @@ const ApiServices = {
   getAllBanks() {
     return Api().get("/banks/info");
   },
+
+  //////// REACTION SERVICES //////////
+  reactToRequest(workflowId, formData) {
+    return Api().patch(`/reaction/${workflowId}`, formData);
+  },
+
+  //////// FILES SERVICES //////////
+  getAllFilesOnExpense(workflowId) {
+    return Api().get(`/${workflowId}/file`);
+  },
+  getFileInfoWithId(fileId) {
+    return Api().get(`/file/${fileId}`);
+  },
 };
 
 export default ApiServices;

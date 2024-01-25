@@ -26,6 +26,7 @@
     "expo": "~49.0.15",
     "expo-auth-session": "~5.0.2",
     "expo-constants": "^14.4.2",
+    "expo-file-system": "~15.4.5",
     "expo-font": "~11.4.0",
     "expo-linking": "~5.0.2",
     "expo-react-native-skeleton-placeholder": "^0.0.1",
@@ -46,6 +47,7 @@
     "react-native-svg-transformer": "^1.1.0",
     "react-native-timeline-listview": "^0.2.3",
     "react-native-toast-message": "^2.1.7",
+    "react-native-webview": "^13.6.4",
     "react-redux": "^8.1.3",
     "redux-persist": "^6.0.0"
   },

@@ -15,6 +15,8 @@ const Comment = ({ data, setUpdate }) => {
   const [isValidEmail, setIsValidEmail] = useState(true);
   const [isLoading, setIsLoading] = useState(false);
 
+  const dataId = data.id;
+
   const handleEmailChange = (text) => {
     setEmail(text);
     setIsValidEmail(text.includes("@"));
@@ -66,15 +68,18 @@ const Comment = ({ data, setUpdate }) => {
       to: [commentToId],
       cc: [],
     };
-
     try {
       setIsLoading(true);
       setUpdate(false);
       const { data, status: statusCode } =
-        await ApiServices.addCommentToRequest(data.id, formData);
+        await ApiServices.addCommentToRequest(dataId, formData);
       if (statusCode === 200) {
         setIsLoading(false);
         setUpdate(true);
+        Toast.show({
+          type: "success",
+          text1: "Comment succesfully added",
+        });
       }
     } catch (error) {
       console.log(error.message);

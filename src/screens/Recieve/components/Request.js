@@ -50,10 +50,12 @@ const Request = ({
     <TouchableOpacity
       activeOpacity={0.9}
       style={styles.container}
-      onPress={() =>
-        navigation.navigate("singlereceive", {
-          data,
-        })
+      onPress={
+        () =>
+          navigation.navigate("singlereceive", {
+            data,
+          })
+        // navigation.navigate("singlereceive")
       }
     >
       <View style={styles.topSection}>

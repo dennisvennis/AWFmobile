@@ -16,16 +16,23 @@ import Timeline from "./components/Timeline";
 import Comment from "./components/Comment";
 import ExpenseDetails from "./components/ExpenseDetails";
 import RequestManager from "./components/RequestManager";
+import Document from "./components/Document";
+import ApiServices from "../../services/ApiServices";
+import { useDispatch, useSelector } from "react-redux";
+import { getRequests } from "../../store/slices/requestSlice";
 
 const { width, height } = Dimensions.get("screen");
 
 const SingleReceiveScreen = ({ route }) => {
   const theme = useTheme();
-  const [request, setRequest] = useState([]);
+  const dispatch = useDispatch();
+  const [request, setRequest] = useState({});
   const [update, setUpdate] = useState(false);
+  const [refresh, setRefresh] = useState(false);
+  const [comments, setComments] = useState([]);
 
   const { data } = route.params;
-
+  const dataId = data.id;
   const statusStyle = () => {
     switch (data.status) {
       case "approved":
@@ -46,6 +53,30 @@ const SingleReceiveScreen = ({ route }) => {
         return styles.defaultStyle;
     }
   };
+
+  useEffect(() => {
+    const fetch = async () => {
+      try {
+        const {
+          data: { data },
+          status: statusCode,
+        } = await ApiServices.veiwComments(dataId);
+        if (statusCode === 200) {
+          setComments(data);
+        }
+      } catch (error) {
+        console.log(error);
+      }
+    };
+    fetch();
+  }, [update]);
+
+  useEffect(() => {
+    let params = {
+      type: "received",
+    };
+    dispatch(getRequests(params));
+  }, [refresh, dispatch]);
 
   return (
     <View
@@ -122,9 +153,14 @@ const SingleReceiveScreen = ({ route }) => {
             </Texts>
           </View>
         </View>
-        <RequestManager data={data} />
+        <RequestManager
+          data={data}
+          comments={comments}
+          setUpdate={setRefresh}
+        />
         <ExpenseDetails data={data} />
-        <Timeline dataId={data.id} update={update} />
+        <Document data={data} />
+        <Timeline update={update} comments={comments} />
         <Comment data={data} setUpdate={setUpdate} />
       </ScrollView>
     </View>
