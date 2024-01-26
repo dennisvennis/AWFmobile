@@ -143,7 +143,8 @@ const styles = StyleSheet.create({
     gap: 3,
   },
   doc_dets_top: {
-    fontSize: height * 0.02,
+    fontSize: height * 0.015,
+    maxWidth: 300,
     color: "#333",
   },
   doc_dets_btm: {

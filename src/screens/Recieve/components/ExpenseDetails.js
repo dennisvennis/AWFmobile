@@ -83,6 +83,7 @@ const ExpenseDetails = ({ data }) => {
     fetchExpenseTypeData();
     fetchCurrenciesData();
     fetchDepartmentsData();
+    console.log(expenseInfo)
   }, []);
 
   return (
@@ -135,14 +136,14 @@ const ExpenseDetails = ({ data }) => {
               Payment Type
             </Texts>
             <Texts variant="p" style={{ ...styles.bnkEchTxt }}>
-              {expenseInfo.paymentType}
+              {expenseInfo?.paymentType || "-"}
             </Texts>
           </View>
         </View>
       </View>
       <View style={{ ...styles.container, marginTop: theme.spacing.l }}>
         <Texts variant="p" style={{ ...styles.bnkDet }}>
-          {departments}
+          {departments ? departments : "No Department"}
         </Texts>
         <View style={styles.deptMainCont}>
           <View style={styles.deptListCont}>
@@ -235,6 +236,7 @@ const styles = StyleSheet.create({
     marginVertical: height * 0.03,
   },
   container: {
+
     borderWidth: 1,
     padding: height * 0.03,
     borderColor: "#c9c9c9",
@@ -257,7 +259,7 @@ const styles = StyleSheet.create({
   },
   bnkEchTxt: {
     textTransform: "capitalize",
-    fontSize: height * 0.02,
+    fontSize: height * 0.018,
     color: "#666",
     fontWeight: 700,
   },
@@ -269,6 +271,8 @@ const styles = StyleSheet.create({
     justifyContent: "space-between",
   },
   deptEch: {
-    alignItems: "center",
+    
+    width: height * 0.1, 
+
   },
 });
