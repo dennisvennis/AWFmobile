@@ -160,7 +160,7 @@ const RequestManager = ({ data, setUpdate }) => {
 
   return (
     <View style={styles.container}>
-      {!hideBtn && (
+      {hideBtn ? null : (
         <View style={styles.btnContainer}>
           <View style={styles.btnTopCont}>
             <TouchableOpacity

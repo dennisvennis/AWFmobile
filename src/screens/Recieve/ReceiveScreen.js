@@ -51,39 +51,12 @@ const ReceiveScreen = () => {
   }
   params.type = "received";
 
-  // useEffect(() => {
-  //   const fetch = async () => {
-  //     setIsLoading(true);
-  //     setRefresh(false);
-  //     try {
-  //       const {
-  //         data: {
-  //           data: { content },
-  //         },
-  //         status: statusCode,
-  //       } = await ApiServices.getRequest(params);
-  //       if (statusCode === 200) {
-  //         setData(content);
-  //         setIsLoading(false);
-  //         setRefresh(true);
-  //       }
-  //     } catch (error) {
-  //       console.log(error);
-  //     }
-  //   };
-  //   fetch();
-  // }, [status, startDate, endDate, refresh]);
-
-  // useEffect(() => {
-  // }, [status]);
-
   useEffect(() => {
     dispatch(getRequests(params));
   }, [status, startDate, endDate]);
 
   useEffect(() => {
     setData(requests);
-    console.log(data.length);
   }, [requests, dispatch]);
 
   return (

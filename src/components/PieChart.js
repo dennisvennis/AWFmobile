@@ -133,7 +133,6 @@ const PieChart = ({ size = 150, strokeWidth = 40 }) => {
       angle += item.percentage * 360;
     });
     setStartAngles(angles);
-    // console.log("?????????///////", fetchedData);
     setData(fetchedData);
   };
 

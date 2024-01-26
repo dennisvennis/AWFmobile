@@ -60,9 +60,6 @@ const App = () => {
     LogBox.ignoreLogs([
       "VirtualizedLists should never be nested inside plain ScrollViews with the same orientation because it can break windowing and other functionality - use another VirtualizedList-backed container instead.",
     ]);
-    LogBox.ignoreLogs([
-      "SerializableStateInvariantMiddleware took 662ms, which is more than the warning threshold of 32ms",
-    ]);
   }, []);
 
   const startInactivityTimeout = () => {

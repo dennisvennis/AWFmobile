@@ -13,7 +13,6 @@ export const getRequests = createAsyncThunk(
   "/requests",
   async (params, thunkAPI) => {
     try {
-      console.log("//////////", params);
       const res = await ApiServices.getRequest(params);
       return res.data.data.content;
     } catch (error) {

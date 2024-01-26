@@ -11,13 +11,18 @@ import Texts from "../../../components/Texts";
 import ApiServices from "../../../services/ApiServices";
 import DocumentSvg from "../../../assets/svg/document.svg";
 import { formatElapsedTime } from "../../../utils/formatElapsedTime";
-import PdfViewer from "../../../components/PdfViewer";
+import { Buffer } from "buffer";
+import * as FileSystem from "expo-file-system";
+import * as Sharing from "expo-sharing";
+import PDFView from "react-native-view-pdf";
 
 const { height, width } = Dimensions.get("screen");
 
 const Document = ({ data }) => {
   const dataId = data.id;
   const [document, setDocument] = useState([]);
+  const [pdfFile, setPdfFile] = useState("");
+  //   const [fileInfo, setFileInfo] = useState({});
 
   useEffect(() => {
     const fetch = async () => {
@@ -35,6 +40,32 @@ const Document = ({ data }) => {
     };
     fetch();
   }, []);
+
+  const handlePdfViewer = async (fileId) => {
+    try {
+      const {
+        data: { data: response },
+        status: statusCode,
+      } = await ApiServices.getFileInfoWithId(fileId);
+      if (statusCode === 200) {
+        let pdfFile = response.file;
+        const buff = Buffer.from(pdfFile, "base64");
+        const base64 = buff.toString("base64");
+
+        const fileUri =
+          FileSystem.documentDirectory + `${encodeURI(response.name)}`;
+
+        await FileSystem.writeAsStringAsync(fileUri, base64, {
+          encoding: FileSystem.EncodingType.Base64,
+        });
+
+        // Sharing.shareAsync(fileUri);
+        setPdfFile(fileUri);
+      }
+    } catch (error) {
+      console.log(error);
+    }
+  };
   return (
     <View style={styles.container}>
       <Texts
@@ -57,9 +88,12 @@ const Document = ({ data }) => {
           {document?.map((data) => {
             return (
               <View key={data.id}>
-                <TouchableOpacity activeOpacity={0.9} style={styles.doc_ech}>
-                  {/* {data?.file && <PdfViewer pdfData={data?.file} />} */}
-
+                {/* {data?.file && <PdfViewer pdfData={pdfFile} />} */}
+                <TouchableOpacity
+                  activeOpacity={0.9}
+                  style={styles.doc_ech}
+                  onPress={() => handlePdfViewer(data.id)}
+                >
                   <DocumentSvg height={height * 0.035} width={height * 0.035} />
                   <View style={styles.doc_ech_dets}>
                     <Texts variant="p" style={styles.doc_dets_top}>
@@ -73,6 +107,18 @@ const Document = ({ data }) => {
               </View>
             );
           })}
+          {pdfFile && (
+            <View style={{ flex: 1 }}>
+              <PDFView
+                fadeInDuration={250.0}
+                style={{ flex: 1 }}
+                resource={pdfFile}
+                resourceType="file"
+                onLoad={() => console.log(`PDF rendered from ${pdfFile}`)}
+                onError={(error) => console.log("Cannot render PDF", error)}
+              />
+            </View>
+          )}
         </View>
       )}
     </View>
