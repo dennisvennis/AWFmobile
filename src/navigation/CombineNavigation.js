@@ -1,4 +1,4 @@
-import { StyleSheet, Dimensions, Image, Platform } from "react-native";
+import { StyleSheet, Dimensions, Image, Platform, BackHandler } from "react-native";
 import { useState, useEffect } from "react";
 import { useSelector } from "react-redux";
 import { createNativeStackNavigator } from "@react-navigation/native-stack";
@@ -15,6 +15,21 @@ const Stack = createNativeStackNavigator();
 
 const CombineNavigation = () => {
   const { isAuthenticated } = useSelector((state) => state.auth);
+
+  useEffect(() => {
+    const handleBackButton = () => {
+      // Disable the back button behavior
+      return true;
+    };
+
+    // Add event listener for the back button
+    BackHandler.addEventListener('hardwareBackPress', handleBackButton);
+
+    // Clean up the event listener when the component is unmounted
+    return () => {
+      BackHandler.removeEventListener('hardwareBackPress', handleBackButton);
+    };
+  }, []);
 
   return (
     <Stack.Navigator>
